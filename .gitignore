@@ -216,3 +216,48 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ════════════════════════════════════════════════════════════════
+#  MikhailTraining — проектные правила
+# ════════════════════════════════════════════════════════════════
+
+# --- Артефакты прогонов ДЗ (генерятся run_hw.py) ---
+# ВНИМАНИЕ: gitignore НЕ поддерживает инлайн-комментарии — паттерн один на строке.
+# ЯКОРЬ '/' обязателен: неякорёный ловил бы одноимённые подкаталоги пакетов.
+/out/
+
+# --- Датасеты (качаются локально, в git не идут; README трекается) ---
+/data/*
+!/data/README.md
+
+# --- Веса / чекпойнты моделей ---
+*.pt
+*.pth
+*.onnx
+*.ckpt
+*.h5
+*.safetensors
+
+# --- Jupyter: вывод ноутбуков чистим перед коммитом ---
+.ipynb_checkpoints/
+
+# --- Claude Code: локальное и опасное ---
+.claude/settings.local.json
+# 🚨 правило 03: писать в worktrees ЗАПРЕЩЕНО, в git они не попадают
+.claude/worktrees/
+.claude/scheduled_tasks.lock
+
+# --- MCP persistent memory (локальное состояние сессий) ---
+MemoryBank/.mcp_memory.json
+MemoryBank/.mcp_memory.json.bak
+
+# --- Scratch / временные дампы ---
+*.tmp
+*.bak
+
+# --- ОС ---
+.DS_Store
+Thumbs.db
+
+# graphify AST tool cache
+graphify-out/
