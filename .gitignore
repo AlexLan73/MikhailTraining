@@ -261,3 +261,6 @@ Thumbs.db
 
 # graphify AST tool cache
 graphify-out/
+
+# hw01 mdscan: конфиг создаётся при холодном старте в каталоге запуска
+/mdscan.yaml

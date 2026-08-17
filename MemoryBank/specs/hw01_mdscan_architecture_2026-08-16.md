@@ -231,7 +231,9 @@ parser:                            # КАК разбираем Markdown (markdow
   plugins: ["footnote", "attrs", "wikilinks"]
                                    # footnote  — ссылки внутри сносок [^1]
                                    # attrs     — ссылки с атрибутами [текст](a){#id .class}
-                                   # wikilinks — [[внутренние ссылки]] (Obsidian/вики)
+                                   # wikilinks — [[внутренние ссылки]] (Obsidian/вики); 🔧 р5: в mdit-py-plugins
+                                   #   такого плагина нет — это встроенное inline-правило экстрактора
+                                   # linkify (гoлые URL) включается автоматически при наличии linkify-it-py
 
 checks:                            # ЧТО проверяем у найденных ссылок
   local: true                      # существование локальных файлов, на которые ведут ссылки
@@ -256,7 +258,7 @@ progress:                          # ВЫВОД ХОДА РАБОТЫ на эк�
   interval_sec: 1.0                # зона 1: как часто перерисовывается строка состояния
   style: line                      # line — одна строка | panel — рамка | off
   message_lines: 1                 # зона 2: сколько строк-сообщений от модулей держим на экране
-  message_ttl_sec: 5               # через сколько секунд строка-сообщение гаснет сама
+  message_ttl_sec: 5.0             # через сколько секунд строка-сообщение гаснет сама (🔧 р5: float)
 
 logging:                           # ЛОГ в файл
   enabled: true                    # false — лог не пишем (по умолчанию включён)
@@ -269,6 +271,7 @@ logging:                           # ЛОГ в файл
 report:                            # ИТОГОВЫЙ Markdown-отчёт
   dir: out/hw01                  # КАТАЛОГ отчёта; имя файла — как у лога, с той же меткой времени
   title: ''                        # заголовок отчёта; пусто → берётся из имени цели
+  console: true                    # 🔧 р5: false — не печатать итоговую таблицу в stdout (run_hw.py, CI)
 
 run:                               # ПОВЕДЕНИЕ ПРОГОНА
   fail_on_broken: true             # true — если нашли битые ссылки, код возврата 1 (удобно для CI)
@@ -739,6 +742,8 @@ classDiagram
         +str error
         +float seconds
         +str thread_name
+        +ok bool
+        +broken_count int
     }
     class RepoInfo {
         <<frozen VO>>
@@ -1191,9 +1196,12 @@ core/mdscan/
 ├── __init__.py                      # фасад пакета: экспортирует Scanner, ScanConfig, ScanSummary
 ├── __main__.py                      # точка входа: python -m core.mdscan
 ├── scanner.py                       # Scanner (Protocol) — публичное API модуля (D18.5)
+├── errors.py                        # 🔧 ревью 5: все исключения пакета (MdScanError, ConfigError, UnknownFieldError,
+│                                    #   MarkdownReadError, GitUnavailableError, GitHubDiscoveryError) — один файл, как enums
 ├── config/
 │   ├── defaults.py                  # значения по умолчанию (конфиг-модуль — исключение D14)
-│   ├── scan_config.py               # ScanConfig (frozen VO)
+│   ├── config_draft.py              # 🔧 ревью 4: изменяемый черновик фазы 0 (data + sources d/y/c), живёт до freeze
+│   ├── scan_config.py               # ScanConfig (frozen VO); from_draft() — единственная точка сборки
 │   ├── yaml_config_loader.py        # чтение + создание mdscan.yaml
 │   ├── cli_override_applier.py      # -поле:значение
 │   └── config_printer.py            # вывод всей конфигурации с источниками
@@ -1204,29 +1212,35 @@ core/mdscan/
 │   └── source_kind.py               # LOCAL · REMOTE_REPO · GITHUB_ORG
 ├── models/
 │   ├── md_link.py · md_file_result.py · repo_info.py · md_task.py · scan_summary.py
+│   └── progress_snapshot.py         # 🔧 ревью 4: frozen VO — срез счётчиков для зоны 1
 ├── cli/
 │   ├── argument_parser.py · cli_arguments.py   # usage печатает ConfigPrinter (config/), отдельного usage_printer нет
-│   └── validation/  rule.py · chain.py · rule_*.py            # V1…V10
+│   └── validation/  rule.py · chain.py · validation_context.py · validation_result.py · rule_*.py   # V1…V10 (🔧 р5: + context/result)
 ├── source/
-│   ├── repository_source.py · local_path_source.py
+│   ├── repository_source.py · local_path_source.py   # 🔧 ревью 5: RepositorySource = repositories() + cleanup() (клоны при keep_clones=false)
 │   ├── remote_repo_source.py · github_org_source.py · source_factory.py   # фабрика: по источнику на цель
 │   └── git_adapter.py               # GitPython: корень, submodules, ls-files, clone (используют source и discovery)
 ├── discovery/
+│   ├── git_file_lister.py           # 🔧 ревью 5: GitFileLister (Protocol) — владеет discovery, реализует GitAdapter структурно (DIP)
 │   ├── nested_repo_finder.py · markdown_file_finder.py · processed_registry.py
 ├── parsing/
 │   ├── markdown_reader.py · link_extractor.py · markdown_it_link_extractor.py
+│   ├── markdown_it_heading_source.py   # 🔧 ревью 4: реализация checking.HeadingSource (заголовки для якорей)
 │   ├── link_classifier.py
 │   └── rules/ link_rule.py · rule_wikilink.py · rule_footnote.py · rule_anchor.py · rule_mailto.py
 │              rule_tel.py · rule_github.py · rule_http.py · rule_file_url.py · rule_local_path.py   # 9 правил
 ├── checking/
-│   ├── link_checker.py · local_file_checker.py · anchor_checker.py
+│   ├── link_checker.py · heading_source.py   # 🔧 ревью 4: HeadingSource (Protocol) — владеет checking, реализует parsing (DIP)
+│   ├── local_file_checker.py · anchor_checker.py
 │   ├── http_checker.py · null_checker.py · checker_factory.py
 ├── runtime/
 │   ├── queues.py · sentinels.py     # END_DISCOVERY, END_RESULTS
 │   ├── markdown_worker.py · base_observer.py · collecting_observer.py
 │   ├── statistics_collector.py · scan_orchestrator.py
 │   ├── notifier.py · null_notifier.py            # Notifier (Protocol) — зона 2; Null Object при выключенном прогрессе
+│   ├── progress_source.py           # 🔧 ревью 4: ProgressSource (Protocol) — snapshot(); реализует оркестратор
 │   ├── progress_reporter.py         # Thread: зона 1 по таймеру + реализует Notifier (зона 2, TTL 5 с)
+│   ├── progress_factory.py          # 🔧 ревью 5: enabled / TTY / rich-или-plain → ProgressReporter | None
 │   └── progress_view.py · rich_progress_view.py · plain_progress_view.py   # Strategy отрисовки (D10)
 ├── log_setup/
 │   ├── logging_setup.py · log_format.py · log_naming.py
@@ -1236,18 +1250,20 @@ core/mdscan/
 
 core/tokenstat/                      # D18 — отдельный инструмент процесса
 ├── token_meter.py                   # Protocol — публичное API модуля (D18.5)
+├── transcript_token_meter.py        # 🔧 ревью 5: реализация TokenMeter; один requestId — одна запись usage
 ├── models/token_usage.py · models/token_totals.py
 ├── transcript_reader.py · token_aggregator.py
 └── token_report_builder.py          # денег не считаем — только количество токенов
 
 homework/hw01_mdlinks/
 ├── __init__.py · README.md
+├── support/fixture_tree_builder.py · expectations.py   # 🔧 ревью 5: наборы A и B (в out/hw01/) — зовут и pytest, и run_hw.py hw01
 └── task.py                          # оркестрант: конфиг → фасад → метрики (40–60 строк)
 
 tests/hw01/
-├── support/fixture_tree_builder.py  # наборы A и B, разворачиваются в out/hw01/
-├── spikes/                          # макеты M1…M5 (D16)
-└── test_*.py                        # pytest, по файлу на компонент
+├── support/http_server.py           # локальный HTTP-сервер для T-07 (генератор деревьев — в homework/hw01_mdlinks/support/, 🔧 р5)
+├── conftest.py                      # T-02: фикстура reference_tree, --rebuild-fixtures
+└── test_*.py                        # pytest, по файлу на модуль (макеты M1–M5 — первые тесты T-06/08/09/10/11)
 
 out/hw01/                            # локально, вне git
 ├── fixture_tree/ · gen_tree/ · _clones/
@@ -1327,7 +1343,7 @@ out/hw01/                            # локально, вне git
 |---|---|---|
 | S0 | Скелет пакета, `enums`, `defaults`, extra `hw01` в `pyproject.toml` (`markdown-it-py`, `mdit-py-plugins`, `GitPython`, `PyYAML`; `rich` — отдельно, опционально) | импорт, дефолты, `pip install -e .[hw01]` проходит |
 | S1 | `FixtureTreeBuilder` (наборы A и B в `out/hw01/`) | дерево строится детерминированно, ожидания сходятся |
-| **SP** | 🔧 **Макеты M1–M5** (D16) в `tests/hw01/spikes/`: конвейер на пустышках, `markdown-it-py`, git-обход, `gh`+clone, прогресс | у каждого макета зелёный тест; **до этого гейта ТЗ под таски не размораживается** |
+| **SP** | Макеты M1–M5 (D16) — 🔧 ревью 4: **вошли в таски** как их первые тесты (M1 → T-10, M2 → T-06, M3 → T-09, M4 → T-08, M5 → T-11), отдельной папки `spikes/` нет | ТЗ под таски = `MemoryBank/tasks/TASK_hw01_modules_T01-T15.md` (T-01…T-16); ранний `hw01_mdscan_spec_…` ⛔ |
 | S2 | Конфиг: yaml-загрузка, создание, `-поле:значение`, `ConfigPrinter` | приоритет источников, неизвестное поле → код 2 |
 | S3 | CLI: разбор + цепочка V1…V10 | матрица аргументов, каждое правило, коды возврата |
 | S4 | Модели данных (`MdLink`, `MdFileResult`, `RepoInfo`, `MdTask`) | поля, равенство, правило владения: после `put()` объект не меняется |
@@ -1370,8 +1386,9 @@ out/hw01/                            # локально, вне git
 источника репозиториев, прогресс, токены). Тесты в бюджет не входят (≈ 900–1100 строк).
 ✅ **Бюджет ≈ 1870 утверждён Alex (2026-08-16)** — «исходные ~1000» относились к размеру кода
 в одном файле, а не к модулю целиком (часть 1, D15). 🔧 ревью 3: +40 строк (`ProgressView`,
-`Scanner`, `NullNotifier`) — ≈ 1910, в пределах +2 % от утверждённого; отдельного согласования не прошу,
-но отмечаю.
+`Scanner`, `NullNotifier`) — ≈ 1910; 🔧 ревью 4: +30 (`ConfigDraft`, `ProgressSnapshot`, `HeadingSource`,
+`ProgressSource` — контракты, снимающие зависимости между параллельными тасками) — **≈ 1940**, +4 % от
+утверждённого 1870; отдельного согласования не прошу, но отмечаю.
 
 ---
 
@@ -1381,7 +1398,7 @@ out/hw01/                            # локально, вне git
 `repos_total`, `repos_nested`, `md_files_total`, `files_ok`, `files_failed`, `links_total`,
 `links_local`, `links_github`, `links_url`, `links_anchor`, `links_mailto`, `links_tel`,
 `links_wikilink`, `links_footnote`, `links_unknown`,
-`broken_local`, `broken_anchor`, `broken_http`, `timeout_http`, `broken_ratio`, `error_rate`,
+`broken_local`, `broken_anchor`, `broken_http`, `timeout_http`, `broken_total` (🔧 р5: все BROKEN+TIMEOUT), `broken_ratio`, `error_rate`,
 `duration_sec`, `throughput_files_per_sec`.
 
 ### 9.2 Качество извлечения (эталонное дерево, набор A)

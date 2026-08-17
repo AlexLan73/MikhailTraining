@@ -36,6 +36,16 @@ nb = [
 dl = [
     "torch>=2.4",
 ]
+# hw01 «Markdown / Git Scanner»: разбор Markdown, обход git-репозиториев, чтение mdscan.yaml.
+# rich — опционально (есть fallback на plain-вывод), поэтому в extra не входит.
+hw01 = [
+    "markdown-it-py>=3.0",
+    "linkify-it-py>=2.0",      # пресет gfm-like: голые URL как ссылки (без него linkify гасится с WARNING)
+    "mdit-py-plugins>=0.4",
+    "GitPython>=3.1",
+    "PyYAML>=6.0",
+    "rich>=13.0",              # цветная консоль/прогресс; без него — plain-fallback
+]
 dev = [
     "ruff>=0.5.0",
     "mypy>=1.10.0",

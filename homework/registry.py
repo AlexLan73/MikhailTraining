@@ -96,9 +96,11 @@ class HomeworkTask(ABC):
 # Новое ДЗ добавляем сюда одной строкой.
 
 from homework.hw00_intro import Hw00Intro  # noqa: E402 — импорт после определения базы
+from homework.hw01_mdlinks import Hw01MdLinks  # noqa: E402 — импорт после определения базы
 
 _TASK_CLASSES: list[type[HomeworkTask]] = [
     Hw00Intro,
+    Hw01MdLinks,
 ]
 
 

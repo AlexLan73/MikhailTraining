@@ -4,22 +4,22 @@
 
 ## Сейчас в работе
 
-- 🎯 **hw01 — CLI: Markdown Link & Dead Code Checker** (2026-08-16) — ✅ **спека принята Alex**
-  (часть 1/2 `specs/hw01_mdscan_reasoning_2026-08-16.md`, часть 2/2 `specs/hw01_mdscan_architecture_2026-08-16.md`;
-  ревью 2 — `specs/hw01_mdscan_review2_fixes_2026-08-16.md`). Бюджет ≈1870 утверждён (после ревью 3 ≈1910).
-  ✅ **Ревью 3** (диаграммы C1–C4 + 3.5 ↔ решения части 1) принято Alex: `MarkdownWorker(BaseObserver)`,
-  отчёт из главного потока с законченным циклом (D6), `check(link, md_file)`; список — `specs/hw01_mdscan_review3_fixes_2026-08-16.md`.
-  ТЗ под таски (`hw01_mdscan_spec_…`) ⛔ заморожено до гейта SP. Кода нет.
-  **Дальше (по команде Alex):** S0 → S1 → **SP: макеты M1–M5** (часть 2 §7); каждый шаг — показать,
-  дождаться приёмки — `.claude/rules/10-execution-gate.md`.
+- — пусто. Ждём следующее ДЗ курса.
 
 ## Сделано ранее
 
-- ✅ **Каркас репозитория** (2026-08-16): правила `.claude/rules/` (9), хуки, MCP, MemoryBank,
+- ✅ **hw01 — CLI: Markdown Link & Dead Code Checker** (2026-08-17): модуль `core/mdscan/`
+  (16 тасков T-01…T-16, 6 волн, агенты Opus), `core/tokenstat/`, ДЗ `homework/hw01_mdlinks/`.
+  `pytest tests/hw01 -q` → 396 passed, mypy 0 ошибок, ruff чисто; `python run_hw.py hw01`
+  даёт `extract_f1 = 1.0`, `classify_accuracy = 1.0`, 28 файлов / 82 ссылки / 7 битых.
+  Документация — `Doc/Modules/mdscan/`. Детали → `TASK_hw01_mdlinks.md`.
+- ✅ **Спека hw01** (2026-08-16): части 1/2 и 2/2 приняты Alex, ревью 2–5 закрыты,
+  ТЗ по таскам — `TASK_hw01_modules_T01-T15.md`.
+- ✅ **Каркас репозитория** (2026-08-16): правила `.claude/rules/`, хуки, MCP, MemoryBank,
   `core/` + `common/` + `homework/`, CLI `run_hw.py`, тесты. Образец переименован `hw01_intro`
-  → **`hw00_intro`** (номера `hwNN` теперь совпадают с нумерацией курса).
+  → **`hw00_intro`** (номера `hwNN` совпадают с нумерацией курса).
 - ✅ **Смена стандарта тестов** (2026-08-16): pytest разрешён и стал стандартом.
 
 ## Следующее
 
-- 📦 Каркас `homework/hw01_mdlinks/task.py` + регистрация в реестре (скилл `/new-homework`).
+- 📚 Новое ДЗ курса (`hw02`) — по команде Alex: скилл `/new-homework`.
