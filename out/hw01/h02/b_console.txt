@@ -1,0 +1,1429 @@
+        mdscan — итоги         
+┌──────────────────┬──────────┐
+│ показатель       │ значение │
+├──────────────────┼──────────┤
+│ файлов           │ 846      │
+│ ссылок           │ 1063     │
+│ битых            │ 319      │
+│ таймаутов        │ 1        │
+│ файлов с ошибкой │ 0        │
+│ длительность, с  │ 19.71    │
+│ код возврата     │ 1        │
+└──────────────────┴──────────┘
+                                 Битые ссылки                                  
+┌───────────────────┬──────────────────┬───────────────────┬──────────────────┐
+│ файл:строка       │ цель             │ статус            │ код              │
+├───────────────────┼──────────────────┼───────────────────┼──────────────────┤
+│ .cursor/skills/ch │ ../../../Doc_Add │ broken            │ нет файла:       │
+│ eck-profiling-imp │ ition/GPU_Profil │                   │ ../../../Doc_Add │
+│ lementation/REFER │ ing_Mechanism.md │                   │ ition/GPU_Profil │
+│ ENCE.md:3         │                  │                   │ ing_Mechanism.md │
+│ .cursor/skills/ch │ ../../Doc_Additi │ broken            │ нет файла:       │
+│ eck-profiling-imp │ on/GPU_Profiling │                   │ ../../Doc_Additi │
+│ lementation/SKILL │ _Mechanism.md    │                   │ on/GPU_Profiling │
+│ .md:8             │                  │                   │ _Mechanism.md    │
+│ .rag/dsp-gpu/DSP/ │ af::array        │ broken            │ нет файла:       │
+│ L2_symbols/DSP.md │                  │                   │ af::array        │
+│ :86               │                  │                   │                  │
+│ .rag/dsp-gpu/core │ std::string      │ broken            │ нет файла:       │
+│ /L2_symbols/core. │                  │                   │ std::string      │
+│ md:264            │                  │                   │                  │
+│ .rag/dsp-gpu/core │ std::string      │ broken            │ нет файла:       │
+│ /L2_symbols/core. │                  │                   │ std::string      │
+│ md:277            │                  │                   │                  │
+│ .rag/dsp-gpu/core │ std::string      │ broken            │ нет файла:       │
+│ /L2_symbols/core. │                  │                   │ std::string      │
+│ md:808            │                  │                   │                  │
+│ .rag/dsp-gpu/core │ std::size_t      │ broken            │ нет файла:       │
+│ /L2_symbols/core. │                  │                   │ std::size_t      │
+│ md:1220           │                  │                   │                  │
+│ .rag/dsp-gpu/core │ std::string      │ broken            │ нет файла:       │
+│ /L2_symbols/core. │                  │                   │ std::string      │
+│ md:1546           │                  │                   │                  │
+│ .rag/dsp-gpu/core │ ../../include/Dr │ broken            │ нет файла:       │
+│ /test_params/drv_ │ vGPU/memory/exte │                   │ ../../include/Dr │
+│ gpu_lib_ExternalC │ rnal_cl_buffer_a │                   │ vGPU/memory/exte │
+│ LBufferAdapter.md │ dapter.hpp       │                   │ rnal_cl_buffer_a │
+│ :45               │                  │                   │ dapter.hpp       │
+│ .rag/dsp-gpu/hete │ ./fir_basic.md   │ broken            │ нет файла:       │
+│ rodyne/use_cases/ │                  │                   │ ./fir_basic.md   │
+│ heterodyne_basic. │                  │                   │                  │
+│ md:46             │                  │                   │                  │
+│ .rag/dsp-gpu/hete │ ./hybrid_backend │ broken            │ нет файла:       │
+│ rodyne/use_cases/ │ .md              │                   │ ./hybrid_backend │
+│ heterodyne_basic. │                  │                   │ .md              │
+│ md:47             │                  │                   │                  │
+│ .rag/dsp-gpu/hete │ ./hybrid_externa │ broken            │ нет файла:       │
+│ rodyne/use_cases/ │ l_context.md     │                   │ ./hybrid_externa │
+│ heterodyne_basic. │                  │                   │ l_context.md     │
+│ md:48             │                  │                   │                  │
+│ .rag/dsp-gpu/hete │ ./statistics_roc │ broken            │ нет файла:       │
+│ rodyne/use_cases/ │ m.md             │                   │ ./statistics_roc │
+│ heterodyne_benchm │                  │                   │ m.md             │
+│ ark_rocm.md:79    │                  │                   │                  │
+│ .rag/dsp-gpu/hete │ ./filters_benchm │ broken            │ нет файла:       │
+│ rodyne/use_cases/ │ ark_rocm.md      │                   │ ./filters_benchm │
+│ heterodyne_benchm │                  │                   │ ark_rocm.md      │
+│ ark_rocm.md:80    │                  │                   │                  │
+│ .rag/dsp-gpu/hete │ ./compile_key.md │ broken            │ нет файла:       │
+│ rodyne/use_cases/ │                  │                   │ ./compile_key.md │
+│ heterodyne_pipeli │                  │                   │                  │
+│ ne.md:48          │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./statistics_com │ broken            │ нет файла:       │
+│ lg/use_cases/benc │ pute_all_benchma │                   │ ./statistics_com │
+│ hmark_symmetrize. │ rk.md            │                   │ pute_all_benchma │
+│ md:46             │                  │                   │ rk.md            │
+│ .rag/dsp-gpu/lina │ ./snr_estimator_ │ broken            │ нет файла:       │
+│ lg/use_cases/benc │ benchmark.md     │                   │ ./snr_estimator_ │
+│ hmark_symmetrize. │                  │                   │ benchmark.md     │
+│ md:47             │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./heterodyne_ben │ broken            │ нет файла:       │
+│ lg/use_cases/benc │ chmark_rocm.md   │                   │ ./heterodyne_ben │
+│ hmark_symmetrize. │                  │                   │ chmark_rocm.md   │
+│ md:48             │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./filters_benchm │ broken            │ нет файла:       │
+│ lg/use_cases/capo │ ark_rocm.md      │                   │ ./filters_benchm │
+│ n_benchmark_rocm. │                  │                   │ ark_rocm.md      │
+│ md:78             │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./statistics_roc │ broken            │ нет файла:       │
+│ lg/use_cases/capo │ m.md             │                   │ ./statistics_roc │
+│ n_benchmark_rocm. │                  │                   │ m.md             │
+│ md:79             │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./moving_average │ broken            │ нет файла:       │
+│ lg/use_cases/capo │ _rocm.md         │                   │ ./moving_average │
+│ n_benchmark_rocm. │                  │                   │ _rocm.md         │
+│ md:80             │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ lg/use_cases/capo │ d                │                   │ ./rocm_backend.m │
+│ n_hip_opencl_to_r │                  │                   │ d                │
+│ ocm.md:60         │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./rocm_external_ │ broken            │ нет файла:       │
+│ lg/use_cases/capo │ context.md       │                   │ ./rocm_external_ │
+│ n_hip_opencl_to_r │                  │                   │ context.md       │
+│ ocm.md:61         │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ lg/use_cases/capo │ d                │                   │ ./rocm_backend.m │
+│ n_opencl_to_rocm. │                  │                   │ d                │
+│ md:62             │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ lg/use_cases/chol │ d                │                   │ ./rocm_backend.m │
+│ esky_inverter_roc │                  │                   │ d                │
+│ m.md:51           │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./filters_rocm.m │ broken            │ нет файла:       │
+│ lg/use_cases/chol │ d                │                   │ ./filters_rocm.m │
+│ esky_inverter_roc │                  │                   │ d                │
+│ m.md:52           │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./rocm_external_ │ broken            │ нет файла:       │
+│ lg/use_cases/chol │ context.md       │                   │ ./rocm_external_ │
+│ esky_inverter_roc │                  │                   │ context.md       │
+│ m.md:53           │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./hybrid_backend │ broken            │ нет файла:       │
+│ lg/use_cases/cros │ .md              │                   │ ./hybrid_backend │
+│ s_backend_convers │                  │                   │ .md              │
+│ ion.md:46         │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ lg/use_cases/cros │ d                │                   │ ./rocm_backend.m │
+│ s_backend_convers │                  │                   │ d                │
+│ ion.md:47         │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./profiling_conv │ broken            │ нет файла:       │
+│ lg/use_cases/cros │ ersions.md       │                   │ ./profiling_conv │
+│ s_backend_convers │                  │                   │ ersions.md       │
+│ ion.md:48         │                  │                   │                  │
+│ .rag/dsp-gpu/lina │ ./profiling_faca │ broken            │ нет файла:       │
+│ lg/use_cases/stag │ de.md            │                   │ ./profiling_faca │
+│ e_profiling.md:46 │                  │                   │ de.md            │
+│ .rag/dsp-gpu/lina │ ./profiling_conv │ broken            │ нет файла:       │
+│ lg/use_cases/stag │ ersions.md       │                   │ ./profiling_conv │
+│ e_profiling.md:47 │                  │                   │ ersions.md       │
+│ .rag/dsp-gpu/lina │ ./profile_analyz │ broken            │ нет файла:       │
+│ lg/use_cases/stag │ er.md            │                   │ ./profile_analyz │
+│ e_profiling.md:48 │                  │                   │ er.md            │
+│ .rag/dsp-gpu/rada │ ./moving_average │ broken            │ нет файла:       │
+│ r/use_cases/fm_av │ _rocm.md         │                   │ ./moving_average │
+│ g_summary.md:46   │                  │                   │ _rocm.md         │
+│ .rag/dsp-gpu/rada │ ./fft_benchmark_ │ broken            │ нет файла:       │
+│ r/use_cases/fm_av │ rocm.md          │                   │ ./fft_benchmark_ │
+│ g_summary.md:47   │                  │                   │ rocm.md          │
+│ .rag/dsp-gpu/rada │ ./fft_maxima_ben │ broken            │ нет файла:       │
+│ r/use_cases/fm_av │ chmark_rocm.md   │                   │ ./fft_maxima_ben │
+│ g_summary.md:48   │                  │                   │ chmark_rocm.md   │
+│ .rag/dsp-gpu/rada │ ./fir_basic.md   │ broken            │ нет файла:       │
+│ r/use_cases/fm_ba │                  │                   │ ./fir_basic.md   │
+│ sic.md:46         │                  │                   │                  │
+│ .rag/dsp-gpu/rada │ ./signal_generat │ broken            │ нет файла:       │
+│ r/use_cases/fm_ba │ ors_rocm_basic.m │                   │ ./signal_generat │
+│ sic.md:48         │ d                │                   │ ors_rocm_basic.m │
+│                   │                  │                   │ d                │
+│ .rag/dsp-gpu/rada │ ./fft_maxima_ben │ broken            │ нет файла:       │
+│ r/use_cases/fm_be │ chmark_rocm.md   │                   │ ./fft_maxima_ben │
+│ nchmark_rocm_all_ │                  │                   │ chmark_rocm.md   │
+│ time.md:46        │                  │                   │                  │
+│ .rag/dsp-gpu/rada │ ./statistics_roc │ broken            │ нет файла:       │
+│ r/use_cases/fm_be │ m.md             │                   │ ./statistics_roc │
+│ nchmark_rocm_all_ │                  │                   │ m.md             │
+│ time.md:47        │                  │                   │                  │
+│ .rag/dsp-gpu/rada │ ./filters_benchm │ broken            │ нет файла:       │
+│ r/use_cases/fm_be │ ark_rocm.md      │                   │ ./filters_benchm │
+│ nchmark_rocm_all_ │                  │                   │ ark_rocm.md      │
+│ time.md:48        │                  │                   │                  │
+│ .rag/dsp-gpu/rada │ ./stage_profilin │ broken            │ нет файла:       │
+│ r/use_cases/fm_st │ g.md             │                   │ ./stage_profilin │
+│ ep_profiling.md:4 │                  │                   │ g.md             │
+│ 6                 │                  │                   │                  │
+│ .rag/dsp-gpu/rada │ ./profiling_faca │ broken            │ нет файла:       │
+│ r/use_cases/fm_st │ de.md            │                   │ ./profiling_faca │
+│ ep_profiling.md:4 │                  │                   │ de.md            │
+│ 7                 │                  │                   │                  │
+│ .rag/dsp-gpu/rada │ ./profiling_conv │ broken            │ нет файла:       │
+│ r/use_cases/fm_st │ ersions.md       │                   │ ./profiling_conv │
+│ ep_profiling.md:4 │                  │                   │ ersions.md       │
+│ 8                 │                  │                   │                  │
+│ .rag/dsp-gpu/rada │ ./fir_basic.md   │ broken            │ нет файла:       │
+│ r/use_cases/range │                  │                   │ ./fir_basic.md   │
+│ _angle_basic.md:4 │                  │                   │                  │
+│ 9                 │                  │                   │                  │
+│ .rag/dsp-gpu/rada │ ./heterodyne_bas │ broken            │ нет файла:       │
+│ r/use_cases/range │ ic.md            │                   │ ./heterodyne_bas │
+│ _angle_basic.md:5 │                  │                   │ ic.md            │
+│ 0                 │                  │                   │                  │
+│ .rag/dsp-gpu/rada │ ./benchmark_symm │ broken            │ нет файла:       │
+│ r/use_cases/range │ etrize.md        │                   │ ./benchmark_symm │
+│ _angle_benchmark. │                  │                   │ etrize.md        │
+│ md:49             │                  │                   │                  │
+│ .rag/dsp-gpu/rada │ ./snr_estimator_ │ broken            │ нет файла:       │
+│ r/use_cases/range │ benchmark.md     │                   │ ./snr_estimator_ │
+│ _angle_benchmark. │                  │                   │ benchmark.md     │
+│ md:50             │                  │                   │                  │
+│ .rag/dsp-gpu/sign │ Quick.md         │ broken            │ нет файла:       │
+│ al_generators/tes │                  │                   │ Quick.md         │
+│ t_params/dsp_sign │                  │                   │                  │
+│ al_generators_Lfm │                  │                   │                  │
+│ ConjugateGenerato │                  │                   │                  │
+│ r.md:58           │                  │                   │                  │
+│ .rag/dsp-gpu/sign │ ../lch_farrow/Fu │ broken            │ нет файла:       │
+│ al_generators/tes │ ll.md            │                   │ ../lch_farrow/Fu │
+│ t_params/dsp_sign │                  │                   │ ll.md            │
+│ al_generators_Lfm │                  │                   │                  │
+│ ConjugateGenerato │                  │                   │                  │
+│ r.md:58           │                  │                   │                  │
+│ .rag/dsp-gpu/sign │ ./filters_rocm.m │ broken            │ нет файла:       │
+│ al_generators/use │ d                │                   │ ./filters_rocm.m │
+│ _cases/form_signa │                  │                   │ d                │
+│ l_rocm.md:78      │                  │                   │                  │
+│ .rag/dsp-gpu/sign │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ al_generators/use │ d                │                   │ ./rocm_backend.m │
+│ _cases/form_signa │                  │                   │ d                │
+│ l_rocm.md:79      │                  │                   │                  │
+│ .rag/dsp-gpu/sign │ ./statistics_roc │ broken            │ нет файла:       │
+│ al_generators/use │ m.md             │                   │ ./statistics_roc │
+│ _cases/form_signa │                  │                   │ m.md             │
+│ l_rocm.md:80      │                  │                   │                  │
+│ .rag/dsp-gpu/sign │ ./fft_processor_ │ broken            │ нет файла:       │
+│ al_generators/use │ rocm.md          │                   │ ./fft_processor_ │
+│ _cases/scriptgene │                  │                   │ rocm.md          │
+│ rator_fftprocesso │                  │                   │                  │
+│ r.md:46           │                  │                   │                  │
+│ .rag/dsp-gpu/sign │ ./gate3_fft_prof │ broken            │ нет файла:       │
+│ al_generators/use │ iler_v2.md       │                   │ ./gate3_fft_prof │
+│ _cases/scriptgene │                  │                   │ iler_v2.md       │
+│ rator_fftprocesso │                  │                   │                  │
+│ r.md:47           │                  │                   │                  │
+│ .rag/dsp-gpu/sign │ ./fft_cpu_refere │ broken            │ нет файла:       │
+│ al_generators/use │ nce_rocm.md      │                   │ ./fft_cpu_refere │
+│ _cases/scriptgene │                  │                   │ nce_rocm.md      │
+│ rator_fftprocesso │                  │                   │                  │
+│ r.md:48           │                  │                   │                  │
+│ .rag/dsp-gpu/sign │ ./filters_benchm │ broken            │ нет файла:       │
+│ al_generators/use │ ark_rocm.md      │                   │ ./filters_benchm │
+│ _cases/signal_gen │                  │                   │ ark_rocm.md      │
+│ erators_benchmark │                  │                   │                  │
+│ _rocm.md:78       │                  │                   │                  │
+│ .rag/dsp-gpu/sign │ ./statistics_roc │ broken            │ нет файла:       │
+│ al_generators/use │ m.md             │                   │ ./statistics_roc │
+│ _cases/signal_gen │                  │                   │ m.md             │
+│ erators_benchmark │                  │                   │                  │
+│ _rocm.md:80       │                  │                   │                  │
+│ .rag/dsp-gpu/sign │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ al_generators/use │ d                │                   │ ./rocm_backend.m │
+│ _cases/signal_gen │                  │                   │ d                │
+│ erators_rocm_basi │                  │                   │                  │
+│ c.md:80           │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_external_ │ broken            │ нет файла:       │
+│ trum/use_cases/co │ context.md       │                   │ ./rocm_external_ │
+│ mplex_to_mag_phas │                  │                   │ context.md       │
+│ e_rocm.md:83      │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ trum/use_cases/co │ d                │                   │ ./rocm_backend.m │
+│ mplex_to_mag_phas │                  │                   │ d                │
+│ e_rocm.md:84      │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./phase_c_gate2. │ broken            │ нет файла:       │
+│ trum/use_cases/co │ md               │                   │ ./phase_c_gate2. │
+│ mplex_to_mag_phas │                  │                   │ md               │
+│ e_rocm.md:85      │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ trum/use_cases/ff │ d                │                   │ ./rocm_backend.m │
+│ t_benchmark_rocm. │                  │                   │ d                │
+│ md:78             │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_external_ │ broken            │ нет файла:       │
+│ trum/use_cases/ff │ context.md       │                   │ ./rocm_external_ │
+│ t_benchmark_rocm. │                  │                   │ context.md       │
+│ md:79             │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./profiling_faca │ broken            │ нет файла:       │
+│ trum/use_cases/ff │ de.md            │                   │ ./profiling_faca │
+│ t_benchmark_rocm. │                  │                   │ de.md            │
+│ md:80             │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_external_ │ broken            │ нет файла:       │
+│ trum/use_cases/ff │ context.md       │                   │ ./rocm_external_ │
+│ t_cpu_reference_r │                  │                   │ context.md       │
+│ ocm.md:79         │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ trum/use_cases/ff │ d                │                   │ ./rocm_backend.m │
+│ t_cpu_reference_r │                  │                   │ d                │
+│ ocm.md:80         │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_external_ │ broken            │ нет файла:       │
+│ trum/use_cases/ff │ context.md       │                   │ ./rocm_external_ │
+│ t_matrix_rocm.md: │                  │                   │ context.md       │
+│ 80                │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ trum/use_cases/fi │ d                │                   │ ./rocm_backend.m │
+│ lters_benchmark_r │                  │                   │ d                │
+│ ocm.md:80         │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ trum/use_cases/fi │ d                │                   │ ./rocm_backend.m │
+│ lters_rocm.md:79  │                  │                   │ d                │
+│ .rag/dsp-gpu/spec │ ./rocm_external_ │ broken            │ нет файла:       │
+│ trum/use_cases/fi │ context.md       │                   │ ./rocm_external_ │
+│ lters_rocm.md:80  │                  │                   │ context.md       │
+│ .rag/dsp-gpu/spec │ ./profiling_faca │ broken            │ нет файла:       │
+│ trum/use_cases/fi │ de.md            │                   │ ./profiling_faca │
+│ r_basic.md:46     │                  │                   │ de.md            │
+│ .rag/dsp-gpu/spec │ ./hybrid_backend │ broken            │ нет файла:       │
+│ trum/use_cases/fi │ .md              │                   │ ./hybrid_backend │
+│ r_basic.md:47     │                  │                   │ .md              │
+│ .rag/dsp-gpu/spec │ ./services.md    │ broken            │ нет файла:       │
+│ trum/use_cases/fi │                  │                   │ ./services.md    │
+│ r_basic.md:48     │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./phase_c_gate2. │ broken            │ нет файла:       │
+│ trum/use_cases/ga │ md               │                   │ ./phase_c_gate2. │
+│ te3_fft_profiler_ │                  │                   │ md               │
+│ v2.md:46          │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./profiling_faca │ broken            │ нет файла:       │
+│ trum/use_cases/ga │ de.md            │                   │ ./profiling_faca │
+│ te3_fft_profiler_ │                  │                   │ de.md            │
+│ v2.md:48          │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ trum/use_cases/he │ d                │                   │ ./rocm_backend.m │
+│ lpers_rocm.md:46  │                  │                   │ d                │
+│ .rag/dsp-gpu/spec │ ./rocm_external_ │ broken            │ нет файла:       │
+│ trum/use_cases/he │ context.md       │                   │ ./rocm_external_ │
+│ lpers_rocm.md:48  │                  │                   │ context.md       │
+│ .rag/dsp-gpu/spec │ ./rocm_external_ │ broken            │ нет файла:       │
+│ trum/use_cases/ka │ context.md       │                   │ ./rocm_external_ │
+│ lman_rocm.md:79   │                  │                   │ context.md       │
+│ .rag/dsp-gpu/spec │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ trum/use_cases/ka │ d                │                   │ ./rocm_backend.m │
+│ lman_rocm.md:80   │                  │                   │ d                │
+│ .rag/dsp-gpu/spec │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ trum/use_cases/lc │ d                │                   │ ./rocm_backend.m │
+│ h_farrow_rocm.md: │                  │                   │ d                │
+│ 77                │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ trum/use_cases/mo │ d                │                   │ ./rocm_backend.m │
+│ ving_average_rocm │                  │                   │ d                │
+│ .md:78            │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_external_ │ broken            │ нет файла:       │
+│ trum/use_cases/mo │ context.md       │                   │ ./rocm_external_ │
+│ ving_average_rocm │                  │                   │ context.md       │
+│ .md:79            │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_external_ │ broken            │ нет файла:       │
+│ trum/use_cases/pr │ context.md       │                   │ ./rocm_external_ │
+│ ocess_magnitude_r │                  │                   │ context.md       │
+│ ocm.md:79         │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_external_ │ broken            │ нет файла:       │
+│ trum/use_cases/sp │ context.md       │                   │ ./rocm_external_ │
+│ ectrum_maxima_roc │                  │                   │ context.md       │
+│ m.md:79           │                  │                   │                  │
+│ .rag/dsp-gpu/spec │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ trum/use_cases/sp │ d                │                   │ ./rocm_backend.m │
+│ ectrum_maxima_roc │                  │                   │ d                │
+│ m.md:80           │                  │                   │                  │
+│ .rag/dsp-gpu/stat │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ s/use_cases/helpe │ d                │                   │ ./rocm_backend.m │
+│ rs_rocm.md:47     │                  │                   │ d                │
+│ .rag/dsp-gpu/stat │ ./filters_rocm.m │ broken            │ нет файла:       │
+│ s/use_cases/helpe │ d                │                   │ ./filters_rocm.m │
+│ rs_rocm.md:48     │                  │                   │ d                │
+│ .rag/dsp-gpu/stat │ ./profile_analyz │ broken            │ нет файла:       │
+│ s/use_cases/snr_e │ er.md            │                   │ ./profile_analyz │
+│ stimator_benchmar │                  │                   │ er.md            │
+│ k.md:51           │                  │                   │                  │
+│ .rag/dsp-gpu/stat │ ./filters_benchm │ broken            │ нет файла:       │
+│ s/use_cases/snr_e │ ark_rocm.md      │                   │ ./filters_benchm │
+│ stimator_benchmar │                  │                   │ ark_rocm.md      │
+│ k.md:52           │                  │                   │                  │
+│ .rag/dsp-gpu/stat │ ./fft_maxima_ben │ broken            │ нет файла:       │
+│ s/use_cases/snr_e │ chmark_rocm.md   │                   │ ./fft_maxima_ben │
+│ stimator_benchmar │                  │                   │ chmark_rocm.md   │
+│ k.md:53           │                  │                   │                  │
+│ .rag/dsp-gpu/stat │ ./moving_average │ broken            │ нет файла:       │
+│ s/use_cases/snr_e │ _rocm.md         │                   │ ./moving_average │
+│ stimator_rocm.md: │                  │                   │ _rocm.md         │
+│ 70                │                  │                   │                  │
+│ .rag/dsp-gpu/stat │ ./filters_benchm │ broken            │ нет файла:       │
+│ s/use_cases/snr_e │ ark_rocm.md      │                   │ ./filters_benchm │
+│ stimator_rocm.md: │                  │                   │ ark_rocm.md      │
+│ 71                │                  │                   │                  │
+│ .rag/dsp-gpu/stat │ ./lch_farrow_ben │ broken            │ нет файла:       │
+│ s/use_cases/stati │ chmark_rocm.md   │                   │ ./lch_farrow_ben │
+│ stics_compute_all │                  │                   │ chmark_rocm.md   │
+│ _benchmark.md:79  │                  │                   │                  │
+│ .rag/dsp-gpu/stat │ ./filters_benchm │ broken            │ нет файла:       │
+│ s/use_cases/stati │ ark_rocm.md      │                   │ ./filters_benchm │
+│ stics_compute_all │                  │                   │ ark_rocm.md      │
+│ _benchmark.md:80  │                  │                   │                  │
+│ .rag/dsp-gpu/stat │ ./moving_average │ broken            │ нет файла:       │
+│ s/use_cases/stati │ _rocm.md         │                   │ ./moving_average │
+│ stics_float_rocm. │                  │                   │ _rocm.md         │
+│ md:78             │                  │                   │                  │
+│ .rag/dsp-gpu/stat │ ./filters_rocm.m │ broken            │ нет файла:       │
+│ s/use_cases/stati │ d                │                   │ ./filters_rocm.m │
+│ stics_float_rocm. │                  │                   │ d                │
+│ md:79             │                  │                   │                  │
+│ .rag/dsp-gpu/stat │ ./rocm_external_ │ broken            │ нет файла:       │
+│ s/use_cases/stati │ context.md       │                   │ ./rocm_external_ │
+│ stics_float_rocm. │                  │                   │ context.md       │
+│ md:80             │                  │                   │                  │
+│ .rag/dsp-gpu/stat │ ./moving_average │ broken            │ нет файла:       │
+│ s/use_cases/stati │ _rocm.md         │                   │ ./moving_average │
+│ stics_rocm.md:79  │                  │                   │ _rocm.md         │
+│ .rag/dsp-gpu/stat │ ./rocm_backend.m │ broken            │ нет файла:       │
+│ s/use_cases/stati │ d                │                   │ ./rocm_backend.m │
+│ stics_rocm.md:80  │                  │                   │ d                │
+│ .rag/dsp-gpu/stra │ ./fir_basic.md   │ broken            │ нет файла:       │
+│ tegies/use_cases/ │                  │                   │ ./fir_basic.md   │
+│ base_strategy.md: │                  │                   │                  │
+│ 51                │                  │                   │                  │
+│ .rag/dsp-gpu/stra │ ./range_angle_ba │ broken            │ нет файла:       │
+│ tegies/use_cases/ │ sic.md           │                   │ ./range_angle_ba │
+│ base_strategy.md: │                  │                   │ sic.md           │
+│ 52                │                  │                   │                  │
+│ .rag/dsp-gpu/stra │ ./fm_basic.md    │ broken            │ нет файла:       │
+│ tegies/use_cases/ │                  │                   │ ./fm_basic.md    │
+│ base_strategy.md: │                  │                   │                  │
+│ 53                │                  │                   │                  │
+│ .rag/dsp-gpu/stra │ ./fm_step_profil │ broken            │ нет файла:       │
+│ tegies/use_cases/ │ ing.md           │                   │ ./fm_step_profil │
+│ debug_steps.md:46 │                  │                   │ ing.md           │
+│ .rag/dsp-gpu/stra │ ./stage_profilin │ broken            │ нет файла:       │
+│ tegies/use_cases/ │ g.md             │                   │ ./stage_profilin │
+│ debug_steps.md:47 │                  │                   │ g.md             │
+│ .rag/dsp-gpu/stra │ ./profiling_faca │ broken            │ нет файла:       │
+│ tegies/use_cases/ │ de.md            │                   │ ./profiling_faca │
+│ debug_steps.md:48 │                  │                   │ de.md            │
+│ .rag/dsp-gpu/stra │ ./benchmark_symm │ broken            │ нет файла:       │
+│ tegies/use_cases/ │ etrize.md        │                   │ ./benchmark_symm │
+│ strategies_benchm │                  │                   │ etrize.md        │
+│ ark_streams.md:46 │                  │                   │                  │
+│ .rag/dsp-gpu/stra │ ./statistics_com │ broken            │ нет файла:       │
+│ tegies/use_cases/ │ pute_all_benchma │                   │ ./statistics_com │
+│ strategies_benchm │ rk.md            │                   │ pute_all_benchma │
+│ ark_streams.md:48 │                  │                   │ rk.md            │
+│ .rag/dsp-gpu/stra │ ./heterodyne_pip │ broken            │ нет файла:       │
+│ tegies/use_cases/ │ eline.md         │                   │ ./heterodyne_pip │
+│ strategies_pipeli │                  │                   │ eline.md         │
+│ ne.md:48          │                  │                   │                  │
+│ .rag/dsp-gpu/stra │ ./fm_step_profil │ broken            │ нет файла:       │
+│ tegies/use_cases/ │ ing.md           │                   │ ./fm_step_profil │
+│ strategies_step_p │                  │                   │ ing.md           │
+│ rofiling.md:46    │                  │                   │                  │
+│ .rag/dsp-gpu/stra │ ./stage_profilin │ broken            │ нет файла:       │
+│ tegies/use_cases/ │ g.md             │                   │ ./stage_profilin │
+│ strategies_step_p │                  │                   │ g.md             │
+│ rofiling.md:47    │                  │                   │                  │
+│ .razbor/Python/st │ ../Modules/stati │ broken            │ нет файла:       │
+│ atistics_api.md:3 │ stics/API.md     │                   │ ../Modules/stati │
+│ 10                │                  │                   │ stics/API.md     │
+│ .razbor/Python/st │ ../Modules/stati │ broken            │ нет файла:       │
+│ atistics_api.md:3 │ stics/Full.md    │                   │ ../Modules/stati │
+│ 11                │                  │                   │ stics/Full.md    │
+│ .razbor/Python/st │ ../../Python_tes │ broken            │ нет файла:       │
+│ atistics_api.md:3 │ t/statistics/tes │                   │ ../../Python_tes │
+│ 12                │ t_compute_all.py │                   │ t/statistics/tes │
+│                   │                  │                   │ t_compute_all.py │
+│ .razbor/Python_te │ #9-python-bindin │ broken            │ нет заголовка с  │
+│ st/Full.md:54     │ gs               │                   │ якорем           │
+│                   │                  │                   │ «9-python-bindin │
+│                   │                  │                   │ gs» в Full.md    │
+│ .razbor/Python_te │ ../../Doc_Additi │ broken            │ нет файла:       │
+│ st/Full.md:1337   │ on/Info_ROCm_HIP │                   │ ../../Doc_Additi │
+│                   │ _Optimization_Gu │                   │ on/Info_ROCm_HIP │
+│                   │ ide.md           │                   │ _Optimization_Gu │
+│                   │                  │                   │ ide.md           │
+│ .razbor/Python_te │ ../Modules/heter │ broken            │ нет файла:       │
+│ st/Full.md:1338   │ odyne/Full.md    │                   │ ../Modules/heter │
+│                   │                  │                   │ odyne/Full.md    │
+│ .razbor/Python_te │ ../../MemoryBank │ broken            │ нет файла:       │
+│ st/Quick.md:328   │ /specs/python_te │                   │ ../../MemoryBank │
+│                   │ st_refactoring.m │                   │ /specs/python_te │
+│                   │ d                │                   │ st_refactoring.m │
+│                   │                  │                   │ d                │
+│ .razbor/addition/ │ ../ROCm_Setup_In │ broken            │ нет файла:       │
+│ Debian_Radeon9070 │ structions.md    │                   │ ../ROCm_Setup_In │
+│ _Setup.md:60      │                  │                   │ structions.md    │
+│ .razbor/addition/ │ #шаг-4--test-run │ broken            │ нет заголовка с  │
+│ GPU_Profiling_Mec │ ner-1            │                   │ якорем           │
+│ hanism.md:22      │                  │                   │ «шаг-4--test-run │
+│                   │                  │                   │ ner-1» в         │
+│                   │                  │                   │ GPU_Profiling_Me │
+│                   │                  │                   │ chanism.md       │
+│ .razbor/addition/ │ ../modules/vecto │ broken            │ нет файла:       │
+│ Info_ROCm_HIP_Opt │ r_algebra/includ │                   │ ../modules/vecto │
+│ imization_Guide.m │ e/kernels/symmet │                   │ r_algebra/includ │
+│ d:102             │ rize_kernel_sour │                   │ e/kernels/symmet │
+│                   │ ces_rocm.hpp     │                   │ rize_kernel_sour │
+│                   │                  │                   │ ces_rocm.hpp     │
+│ .razbor/addition/ │ ../modules/vecto │ broken            │ нет файла:       │
+│ Info_ROCm_HIP_Opt │ r_algebra/src/sy │                   │ ../modules/vecto │
+│ imization_Guide.m │ mmetrize_gpu_roc │                   │ r_algebra/src/sy │
+│ d:530             │ m.cpp            │                   │ mmetrize_gpu_roc │
+│                   │                  │                   │ m.cpp            │
+│ MemoryBank/.archi │ 05_Refresh_Mecha │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ nics.md#pin      │                   │ якорем «pin» в   │
+│ /Doc/00_Glossary. │                  │                   │ 05_Refresh_Mecha │
+│ md:187            │                  │                   │ nics.md          │
+│ MemoryBank/.archi │ 05_Refresh_Mecha │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ nics.md#pin      │                   │ якорем «pin» в   │
+│ /Doc/01_Zones_Ove │                  │                   │ 05_Refresh_Mecha │
+│ rview.md:150      │                  │                   │ nics.md          │
+│ MemoryBank/.archi │ 09_Scripts_Refer │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ ence.md#promote_ │                   │ якорем           │
+│ /Doc/02_Zone0_Ale │ to_smi100sh      │                   │ «promote_to_smi1 │
+│ x_Setup.md:207    │                  │                   │ 00sh» в          │
+│                   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ 09_Scripts_Refer │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ ence.md#promote_ │                   │ якорем           │
+│ /Doc/02_Zone0_Ale │ breaking_changes │                   │ «promote_breakin │
+│ x_Setup.md:233    │ h                │                   │ g_changesh» в    │
+│                   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ 09_Scripts_Refer │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ ence.md#promote_ │                   │ якорем           │
+│ /Doc/02_Zone0_Ale │ to_smi100sh      │                   │ «promote_to_smi1 │
+│ x_Setup.md:305    │                  │                   │ 00sh» в          │
+│                   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ 05_Refresh_Mecha │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ nics.md#pin      │                   │ якорем «pin» в   │
+│ /Doc/04_Zone2_LP_ │                  │                   │ 05_Refresh_Mecha │
+│ Workflow.md:248   │                  │                   │ nics.md          │
+│ MemoryBank/.archi │ 09_Scripts_Refer │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ ence.md#update_d │                   │ якорем           │
+│ /Doc/05_Refresh_M │ sppy             │                   │ «update_dsppy» в │
+│ echanics.md:351   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ 05_Refresh_Mecha │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ nics.md#pin      │                   │ якорем «pin» в   │
+│ /Doc/06_Patch_Flo │                  │                   │ 05_Refresh_Mecha │
+│ w.md:285          │                  │                   │ nics.md          │
+│ MemoryBank/.archi │ #init_release_re │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ possh            │                   │ якорем           │
+│ /Doc/09_Scripts_R │                  │                   │ «init_release_re │
+│ eference.md:12    │                  │                   │ possh» в         │
+│                   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ #promote_to_smi1 │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ 00sh             │                   │ якорем           │
+│ /Doc/09_Scripts_R │                  │                   │ «promote_to_smi1 │
+│ eference.md:13    │                  │                   │ 00sh» в          │
+│                   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ #promote_breakin │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ g_changesh       │                   │ якорем           │
+│ /Doc/09_Scripts_R │                  │                   │ «promote_breakin │
+│ eference.md:14    │                  │                   │ g_changesh» в    │
+│                   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ #update_dsppy    │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │                  │                   │ якорем           │
+│ /Doc/09_Scripts_R │                  │                   │ «update_dsppy» в │
+│ eference.md:15    │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ #generate_cmake_ │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ depspy           │                   │ якорем           │
+│ /Doc/09_Scripts_R │                  │                   │ «generate_cmake_ │
+│ eference.md:16    │                  │                   │ depspy» в        │
+│                   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ #topo_sortpy     │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │                  │                   │ якорем           │
+│ /Doc/09_Scripts_R │                  │                   │ «topo_sortpy» в  │
+│ eference.md:17    │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ #nightly-backups │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ h                │                   │ якорем           │
+│ /Doc/09_Scripts_R │                  │                   │ «nightly-backups │
+│ eference.md:18    │                  │                   │ h» в             │
+│                   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ #freeze_for_tran │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ sfersh           │                   │ якорем           │
+│ /Doc/09_Scripts_R │                  │                   │ «freeze_for_tran │
+│ eference.md:19    │                  │                   │ sfersh» в        │
+│                   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ #hookspre-commit │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │                  │                   │ якорем           │
+│ /Doc/09_Scripts_R │                  │                   │ «hookspre-commit │
+│ eference.md:20    │                  │                   │ » в              │
+│                   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ 03_Zone1_SMI100_ │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ Setup.md#backup- │                   │ якорем           │
+│ /Doc/09_Scripts_R │ -recovery        │                   │ «backup--recover │
+│ eference.md:353   │                  │                   │ y» в             │
+│                   │                  │                   │ 03_Zone1_SMI100_ │
+│                   │                  │                   │ Setup.md         │
+│ MemoryBank/.archi │ 08_CI_And_Integr │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ ity.md#pre-commi │                   │ якорем           │
+│ /Doc/09_Scripts_R │ t-hook-опциональ │                   │ «pre-commit-hook │
+│ eference.md:408   │ но               │                   │ -опционально» в  │
+│                   │                  │                   │ 08_CI_And_Integr │
+│                   │                  │                   │ ity.md           │
+│ MemoryBank/.archi │ 05_Refresh_Mecha │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ nics.md#🅱️-вариа │                   │ якорем           │
+│ /Doc/10_Decisions │ нт-b--python-скр │                   │ «🅱️-вариант-b--p │
+│ _Log.md:201       │ ипт-update_dsppy │                   │ ython-скрипт-upd │
+│                   │                  │                   │ ate_dsppy» в     │
+│                   │                  │                   │ 05_Refresh_Mecha │
+│                   │                  │                   │ nics.md          │
+│ MemoryBank/.archi │ ../../MemoryBank │ broken            │ нет файла:       │
+│ tecture/CMake-GIT │ /specs/cmake_git │                   │ ../../MemoryBank │
+│ /Doc/10_Decisions │ _distribution_sp │                   │ /specs/cmake_git │
+│ _Log.md:288       │ ec_2026-04-18.md │                   │ _distribution_sp │
+│                   │                  │                   │ ec_2026-04-18.md │
+│ MemoryBank/.archi │ ../../MemoryBank │ broken            │ нет файла:       │
+│ tecture/CMake-GIT │ /specs/cmake_git │                   │ ../../MemoryBank │
+│ /Doc/10_Decisions │ _aware_build.md  │                   │ /specs/cmake_git │
+│ _Log.md:289       │                  │                   │ _aware_build.md  │
+│ MemoryBank/.archi │ #cmake-configure │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ --smi100-unreach │                   │ якорем           │
+│ /Doc/11_Troublesh │ able             │                   │ «cmake-configure │
+│ ooting.md:10      │                  │                   │ --smi100-unreach │
+│                   │                  │                   │ able» в          │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #update_dsppy-co │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ mmand-not-found  │                   │ якорем           │
+│ /Doc/11_Troublesh │                  │                   │ «update_dsppy-co │
+│ ooting.md:11      │                  │                   │ mmand-not-found» │
+│                   │                  │                   │  в               │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #vendor-не-обнов │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ ляется           │                   │ якорем           │
+│ /Doc/11_Troublesh │                  │                   │ «vendor-не-обнов │
+│ ooting.md:12      │                  │                   │ ляется» в        │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #pin-не-сработал │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │                  │                   │ якорем           │
+│ /Doc/11_Troublesh │                  │                   │ «pin-не-сработал │
+│ ooting.md:13      │                  │                   │ » в              │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #огромный-diff-v │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ endor            │                   │ якорем           │
+│ /Doc/11_Troublesh │                  │                   │ «огромный-diff-v │
+│ ooting.md:14      │                  │                   │ endor» в         │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #git-clone-больш │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ ой               │                   │ якорем           │
+│ /Doc/11_Troublesh │                  │                   │ «git-clone-больш │
+│ ooting.md:15      │                  │                   │ ой» в            │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #dev-overlay-пра │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ вки-игнорируются │                   │ якорем           │
+│ /Doc/11_Troublesh │                  │                   │ «dev-overlay-пра │
+│ ooting.md:16      │                  │                   │ вки-игнорируются │
+│                   │                  │                   │ » в              │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #pre-receive-hoo │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ k-отклоняет      │                   │ якорем           │
+│ /Doc/11_Troublesh │                  │                   │ «pre-receive-hoo │
+│ ooting.md:17      │                  │                   │ k-отклоняет» в   │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #ci-vendor-drift │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │                  │                   │ якорем           │
+│ /Doc/11_Troublesh │                  │                   │ «ci-vendor-drift │
+│ ooting.md:18      │                  │                   │ » в              │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #target-pc-работ │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ ает-неправильно  │                   │ якорем           │
+│ /Doc/11_Troublesh │                  │                   │ «target-pc-работ │
+│ ooting.md:19      │                  │                   │ ает-неправильно» │
+│                   │                  │                   │  в               │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #потерял-правки- │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ в-build_deps     │                   │ якорем           │
+│ /Doc/11_Troublesh │                  │                   │ «потерял-правки- │
+│ ooting.md:20      │                  │                   │ в-build_deps» в  │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #deps_statejson- │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ повреждён        │                   │ якорем           │
+│ /Doc/11_Troublesh │                  │                   │ «deps_statejson- │
+│ ooting.md:21      │                  │                   │ повреждён» в     │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ #cmake-configure │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ --smi100-unreach │                   │ якорем           │
+│ /Doc/11_Troublesh │ able             │                   │ «cmake-configure │
+│ ooting.md:127     │                  │                   │ --smi100-unreach │
+│                   │                  │                   │ able» в          │
+│                   │                  │                   │ 11_Troubleshooti │
+│                   │                  │                   │ ng.md            │
+│ MemoryBank/.archi │ 03_Zone1_SMI100_ │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ Setup.md#pre-rec │                   │ якорем           │
+│ /Doc/12_Security_ │ eive-hooks       │                   │ «pre-receive-hoo │
+│ Model.md:110      │                  │                   │ ks» в            │
+│                   │                  │                   │ 03_Zone1_SMI100_ │
+│                   │                  │                   │ Setup.md         │
+│ MemoryBank/.archi │ 03_Zone1_SMI100_ │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ Setup.md#backup- │                   │ якорем           │
+│ /Doc/12_Security_ │ -recovery        │                   │ «backup--recover │
+│ Model.md:148      │                  │                   │ y» в             │
+│                   │                  │                   │ 03_Zone1_SMI100_ │
+│                   │                  │                   │ Setup.md         │
+│ MemoryBank/.archi │ 02_Zone0_Alex_Se │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ tup.md#promotion │                   │ якорем           │
+│ /Doc/12_Security_ │ slogjson         │                   │ «promotionslogjs │
+│ Model.md:149      │                  │                   │ on» в            │
+│                   │                  │                   │ 02_Zone0_Alex_Se │
+│                   │                  │                   │ tup.md           │
+│ MemoryBank/.archi │ 09_Scripts_Refer │ broken            │ нет заголовка с  │
+│ tecture/CMake-GIT │ ence.md#promote_ │                   │ якорем           │
+│ /Doc/README.md:68 │ to_smi100sh      │                   │ «promote_to_smi1 │
+│                   │                  │                   │ 00sh» в          │
+│                   │                  │                   │ 09_Scripts_Refer │
+│                   │                  │                   │ ence.md          │
+│ MemoryBank/.archi │ Distributed_Modu │ broken            │ нет файла:       │
+│ tecture/CMake-GIT │ les_Guide.tex    │                   │ Distributed_Modu │
+│ /Doc/README.md:11 │                  │                   │ les_Guide.tex    │
+│ 3                 │                  │                   │                  │
+│ MemoryBank/.archi │ https://develope │ broken (доступ    │ 403              │
+│ tecture/CMake-GIT │ rs.redhat.com/bl │ закрыт?)          │                  │
+│ /Review_VariantA_ │ og/2020/04/02/ho │                   │                  │
+│ Kodo_2026-04-18.m │ w-to-write-an-ab │                   │                  │
+│ d:590             │ i-compliance-che │                   │                  │
+│                   │ cker-using-libab │                   │                  │
+│                   │ igail            │                   │                  │
+│ MemoryBank/.archi │ ../tasks/TASK_py │ broken            │ нет файла:       │
+│ tecture/DSP-GPU_A │ thon_migration_p │                   │ ../tasks/TASK_py │
+│ rchitecture_Analy │ hase_A_2026-04-3 │                   │ thon_migration_p │
+│ sis.md:428        │ 0.md             │                   │ hase_A_2026-04-3 │
+│                   │                  │                   │ 0.md             │
+│ MemoryBank/.archi │ ../tasks/TASK_py │ broken            │ нет файла:       │
+│ tecture/DSP-GPU_A │ thon_migration_p │                   │ ../tasks/TASK_py │
+│ rchitecture_Analy │ hase_B_debian_20 │                   │ thon_migration_p │
+│ sis.md:428        │ 26-05-03.md      │                   │ hase_B_debian_20 │
+│                   │                  │                   │ 26-05-03.md      │
+│ MemoryBank/.archi │ ../tasks/TASK_py │ broken            │ нет файла:       │
+│ tecture/DSP-GPU_D │ thon_migration_p │                   │ ../tasks/TASK_py │
+│ esign_C4_Full.md: │ hase_A_2026-04-3 │                   │ thon_migration_p │
+│ 770               │ 0.md             │                   │ hase_A_2026-04-3 │
+│                   │                  │                   │ 0.md             │
+│ MemoryBank/.archi │ ../tasks/TASK_py │ broken            │ нет файла:       │
+│ tecture/DSP-GPU_D │ thon_migration_p │                   │ ../tasks/TASK_py │
+│ esign_C4_Full.md: │ hase_B_debian_20 │                   │ thon_migration_p │
+│ 771               │ 26-05-03.md      │                   │ hase_B_debian_20 │
+│                   │                  │                   │ 26-05-03.md      │
+│ MemoryBank/.claud │ ../modules/vecto │ broken            │ нет файла:       │
+│ e/specs/ROCm_HIP_ │ r_algebra/includ │                   │ ../modules/vecto │
+│ Optimization_Guid │ e/kernels/symmet │                   │ r_algebra/includ │
+│ e.md:102          │ rize_kernel_sour │                   │ e/kernels/symmet │
+│                   │ ces_rocm.hpp     │                   │ rize_kernel_sour │
+│                   │                  │                   │ ces_rocm.hpp     │
+│ MemoryBank/.claud │ ../modules/vecto │ broken            │ нет файла:       │
+│ e/specs/ROCm_HIP_ │ r_algebra/src/sy │                   │ ../modules/vecto │
+│ Optimization_Guid │ mmetrize_gpu_roc │                   │ r_algebra/src/sy │
+│ e.md:530          │ m.cpp            │                   │ mmetrize_gpu_roc │
+│                   │                  │                   │ m.cpp            │
+│ MemoryBank/.claud │ ../../CLAUDE.md  │ broken            │ нет файла:       │
+│ e/specs/Ref03_Uni │                  │                   │ ../../CLAUDE.md  │
+│ fied_Architecture │                  │                   │                  │
+│ .md:592           │                  │                   │                  │
+│ MemoryBank/.claud │ ../~Разобрать/DS │ broken            │ нет файла:       │
+│ e/specs/Ref03_Uni │ P-GPU_Architectu │                   │ ../~Разобрать/DS │
+│ fied_Architecture │ re_Analysis.md   │                   │ P-GPU_Architectu │
+│ .md:593           │                  │                   │ re_Analysis.md   │
+│ MemoryBank/.claud │ ../~Разобрать/DS │ broken            │ нет файла:       │
+│ e/specs/Ref03_Uni │ P-GPU_Design_C4_ │                   │ ../~Разобрать/DS │
+│ fied_Architecture │ Full.md          │                   │ P-GPU_Design_C4_ │
+│ .md:594           │                  │                   │ Full.md          │
+│ MemoryBank/.claud │ ../~Разобрать/GP │ broken            │ нет файла:       │
+│ e/specs/Ref03_Uni │ U_Profiling_Mech │                   │ ../~Разобрать/GP │
+│ fied_Architecture │ anism.md         │                   │ U_Profiling_Mech │
+│ .md:595           │                  │                   │ anism.md         │
+│ MemoryBank/.claud │ ../CMake-GIT/    │ broken            │ нет файла:       │
+│ e/specs/Ref03_Uni │                  │                   │ ../CMake-GIT/    │
+│ fied_Architecture │                  │                   │                  │
+│ .md:596           │                  │                   │                  │
+│ MemoryBank/.rag/m │ .claude/rules/06 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -profiling.md    │                   │ .claude/rules/06 │
+│ iew.md:48         │                  │                   │ -profiling.md    │
+│ MemoryBank/.rag/m │ .claude/rules/07 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -console-output. │                   │ .claude/rules/07 │
+│ iew.md:49         │ md               │                   │ -console-output. │
+│                   │                  │                   │ md               │
+│ MemoryBank/.rag/m │ .claude/rules/08 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -logging.md      │                   │ .claude/rules/08 │
+│ iew.md:50         │                  │                   │ -logging.md      │
+│ MemoryBank/.rag/m │ .claude/rules/05 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -architecture-re │                   │ .claude/rules/05 │
+│ iew.md:78         │ f03.md           │                   │ -architecture-re │
+│                   │                  │                   │ f03.md           │
+│ MemoryBank/.rag/m │ .claude/rules/14 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -cpp-style.md    │                   │ .claude/rules/14 │
+│ iew.md:79         │                  │                   │ -cpp-style.md    │
+│ MemoryBank/.rag/m │ .claude/rules/15 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -cpp-testing.md  │                   │ .claude/rules/15 │
+│ iew.md:80         │                  │                   │ -cpp-testing.md  │
+│ MemoryBank/.rag/m │ .claude/rules/12 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -cmake-build.md  │                   │ .claude/rules/12 │
+│ iew.md:81         │                  │                   │ -cmake-build.md  │
+│ MemoryBank/.rag/m │ .claude/rules/11 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -python-bindings │                   │ .claude/rules/11 │
+│ iew.md:82         │ .md              │                   │ -python-bindings │
+│                   │                  │                   │ .md              │
+│ MemoryBank/.rag/m │ .claude/rules/13 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -optimization-do │                   │ .claude/rules/13 │
+│ iew.md:83         │ cs.md            │                   │ -optimization-do │
+│                   │                  │                   │ cs.md            │
+│ MemoryBank/.rag/m │ .claude/rules/09 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -rocm-only.md    │                   │ .claude/rules/09 │
+│ iew.md:84         │                  │                   │ -rocm-only.md    │
+│ MemoryBank/.rag/m │ .claude/rules/02 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -workflow.md     │                   │ .claude/rules/02 │
+│ iew.md:108        │                  │                   │ -workflow.md     │
+│ MemoryBank/.rag/m │ .claude/rules/00 │ broken            │ нет файла:       │
+│ eta/dsp_gpu_overv │ -new-task-workfl │                   │ .claude/rules/00 │
+│ iew.md:123        │ ow.md            │                   │ -new-task-workfl │
+│                   │                  │                   │ ow.md            │
+│ MemoryBank/MASTER │ specs/phase7_com │ broken            │ нет файла:       │
+│ _INDEX.md:94      │ pare_2026-06-01. │                   │ specs/phase7_com │
+│                   │ md               │                   │ pare_2026-06-01. │
+│                   │                  │                   │ md               │
+│ MemoryBank/archiv │ ../specs/Header_ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ Comment_Format_P │                   │ ../specs/Header_ │
+│ 01/TASK_HeaderCom │ lan_2026-05-01.m │                   │ Comment_Format_P │
+│ mentFormat_2026-0 │ d                │                   │ lan_2026-05-01.m │
+│ 5-01.md:3         │                  │                   │ d                │
+│ MemoryBank/archiv │ ../specs/LLM_and │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ _RAG/00_Master_P │                   │ ../specs/LLM_and │
+│ 01/TASK_HeaderCom │ lan_2026-04-30.m │                   │ _RAG/00_Master_P │
+│ mentFormat_2026-0 │ d                │                   │ lan_2026-04-30.m │
+│ 5-01.md:3         │                  │                   │ d                │
+│ MemoryBank/archiv │ ../specs/review_ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ stats_2026-04-15 │                   │ ../specs/review_ │
+│ 01/TASK_Stats_Rev │ .md              │                   │ stats_2026-04-15 │
+│ iew_2026-04-15.md │                  │                   │ .md              │
+│ :3                │                  │                   │                  │
+│ MemoryBank/archiv │ ../specs/review_ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ stats_2026-04-15 │                   │ ../specs/review_ │
+│ 01/TASK_Stats_Rev │ .md              │                   │ stats_2026-04-15 │
+│ iew_2026-04-15.md │                  │                   │ .md              │
+│ :270              │                  │                   │                  │
+│ MemoryBank/archiv │ TASK_Core_Spectr │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ um_Review_2026-0 │                   │ TASK_Core_Spectr │
+│ 01/TASK_Stats_Rev │ 4-15.md          │                   │ um_Review_2026-0 │
+│ iew_2026-04-15.md │                  │                   │ 4-15.md          │
+│ :271              │                  │                   │                  │
+│ MemoryBank/archiv │ ../changelog/202 │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ 6-04-15_core_spe │                   │ ../changelog/202 │
+│ 01/TASK_Stats_Rev │ ctrum_followups. │                   │ 6-04-15_core_spe │
+│ iew_2026-04-15.md │ md               │                   │ ctrum_followups. │
+│ :272              │                  │                   │ md               │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ migration_plan_2 │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ 026-04-29.md     │                   │ migration_plan_2 │
+│ gration_phase_A_2 │                  │                   │ 026-04-29.md     │
+│ 026-04-30.md:3    │                  │                   │                  │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ migration_plan_r │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ eview_2026-04-30 │                   │ migration_plan_r │
+│ gration_phase_A_2 │ .md              │                   │ eview_2026-04-30 │
+│ 026-04-30.md:3    │                  │                   │ .md              │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ pytest_audit_202 │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ 6-04-29.md       │                   │ pytest_audit_202 │
+│ gration_phase_A_2 │                  │                   │ 6-04-29.md       │
+│ 026-04-30.md:3    │                  │                   │                  │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ migration_plan_2 │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ 026-04-29.md     │                   │ migration_plan_2 │
+│ gration_phase_A_2 │                  │                   │ 026-04-29.md     │
+│ 026-04-30.md:56   │                  │                   │                  │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ sub_repo_tests_d │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ iff_2026-04-30.m │                   │ sub_repo_tests_d │
+│ gration_phase_A_2 │ d                │                   │ iff_2026-04-30.m │
+│ 026-04-30.md:126  │                  │                   │ d                │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ pytest_audit_202 │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ 6-04-29.md       │                   │ pytest_audit_202 │
+│ gration_phase_A_2 │                  │                   │ 6-04-29.md       │
+│ 026-04-30.md:197  │                  │                   │                  │
+│ MemoryBank/archiv │ ../.future/TASK_ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ script_dsl_rocm. │                   │ ../.future/TASK_ │
+│ 01/TASK_python_mi │ md               │                   │ script_dsl_rocm. │
+│ gration_phase_A_2 │                  │                   │ md               │
+│ 026-04-30.md:406  │                  │                   │                  │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ migration_plan_2 │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ 026-04-29.md     │                   │ migration_plan_2 │
+│ gration_phase_A_2 │                  │                   │ 026-04-29.md     │
+│ 026-04-30.md:413  │                  │                   │                  │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ migration_plan_2 │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ 026-04-29.md     │                   │ migration_plan_2 │
+│ gration_phase_A_2 │                  │                   │ 026-04-29.md     │
+│ 026-04-30.md:800  │                  │                   │                  │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ migration_plan_r │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ eview_2026-04-30 │                   │ migration_plan_r │
+│ gration_phase_A_2 │ .md              │                   │ eview_2026-04-30 │
+│ 026-04-30.md:801  │                  │                   │ .md              │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ pytest_audit_202 │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ 6-04-29.md       │                   │ pytest_audit_202 │
+│ gration_phase_A_2 │                  │                   │ 6-04-29.md       │
+│ 026-04-30.md:802  │                  │                   │                  │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ migration_plan_2 │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ 026-04-29.md     │                   │ migration_plan_2 │
+│ gration_phase_B_d │                  │                   │ 026-04-29.md     │
+│ ebian_2026-05-03. │                  │                   │                  │
+│ md:3              │                  │                   │                  │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ migration_plan_2 │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ 026-04-29.md     │                   │ migration_plan_2 │
+│ gration_phase_B_d │                  │                   │ 026-04-29.md     │
+│ ebian_2026-05-03. │                  │                   │                  │
+│ md:339            │                  │                   │                  │
+│ MemoryBank/archiv │ ../specs/python/ │ broken            │ нет файла:       │
+│ e/closed_2026-06- │ migration_plan_r │                   │ ../specs/python/ │
+│ 01/TASK_python_mi │ eview_2026-04-30 │                   │ migration_plan_r │
+│ gration_phase_B_d │ .md              │                   │ eview_2026-04-30 │
+│ ebian_2026-05-03. │                  │                   │ .md              │
+│ md:340            │                  │                   │                  │
+│ MemoryBank/archiv │ .claude/rules/01 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -user-profile.md │                   │ .claude/rules/01 │
+│ -04-21/CLAUDE.md: │                  │                   │ -user-profile.md │
+│ 14                │                  │                   │                  │
+│ MemoryBank/archiv │ .claude/rules/04 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -testing-python. │                   │ .claude/rules/04 │
+│ -04-21/CLAUDE.md: │ md               │                   │ -testing-python. │
+│ 21                │                  │                   │ md               │
+│ MemoryBank/archiv │ .claude/rules/03 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -worktree-safety │                   │ .claude/rules/03 │
+│ -04-21/CLAUDE.md: │ .md              │                   │ -worktree-safety │
+│ 25                │                  │                   │ .md              │
+│ MemoryBank/archiv │ .claude/rules/09 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -rocm-only.md    │                   │ .claude/rules/09 │
+│ -04-21/CLAUDE.md: │                  │                   │ -rocm-only.md    │
+│ 29                │                  │                   │                  │
+│ MemoryBank/archiv │ .claude/rules/06 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -profiling.md    │                   │ .claude/rules/06 │
+│ -04-21/CLAUDE.md: │                  │                   │ -profiling.md    │
+│ 38                │                  │                   │                  │
+│ MemoryBank/archiv │ .claude/rules/07 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -console-output. │                   │ .claude/rules/07 │
+│ -04-21/CLAUDE.md: │ md               │                   │ -console-output. │
+│ 39                │                  │                   │ md               │
+│ MemoryBank/archiv │ .claude/rules/08 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -logging.md      │                   │ .claude/rules/08 │
+│ -04-21/CLAUDE.md: │                  │                   │ -logging.md      │
+│ 40                │                  │                   │                  │
+│ MemoryBank/archiv │ .claude/rules/10 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -modules.md      │                   │ .claude/rules/10 │
+│ -04-21/CLAUDE.md: │                  │                   │ -modules.md      │
+│ 50                │                  │                   │                  │
+│ MemoryBank/archiv │ .claude/rules/05 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -architecture-re │                   │ .claude/rules/05 │
+│ -04-21/CLAUDE.md: │ f03.md           │                   │ -architecture-re │
+│ 53                │                  │                   │ f03.md           │
+│ MemoryBank/archiv │ .claude/rules/12 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -cmake-build.md  │                   │ .claude/rules/12 │
+│ -04-21/CLAUDE.md: │                  │                   │ -cmake-build.md  │
+│ 55                │                  │                   │                  │
+│ MemoryBank/archiv │ .claude/rules/11 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -python-bindings │                   │ .claude/rules/11 │
+│ -04-21/CLAUDE.md: │ .md              │                   │ -python-bindings │
+│ 64                │                  │                   │ .md              │
+│ MemoryBank/archiv │ .claude/rules/02 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -workflow.md     │                   │ .claude/rules/02 │
+│ -04-21/CLAUDE.md: │                  │                   │ -workflow.md     │
+│ 81                │                  │                   │                  │
+│ MemoryBank/archiv │ .claude/rules/13 │ broken            │ нет файла:       │
+│ e/new_claude_2026 │ -optimization-do │                   │ .claude/rules/13 │
+│ -04-21/CLAUDE.md: │ cs.md            │                   │ -optimization-do │
+│ 102               │                  │                   │ cs.md            │
+│ MemoryBank/change │ ../tasks/TASK_Co │ broken            │ нет файла:       │
+│ log/2026-04-15_co │ re_Spectrum_Revi │                   │ ../tasks/TASK_Co │
+│ re_spectrum_follo │ ew_2026-04-15.md │                   │ re_Spectrum_Revi │
+│ wups.md:3         │                  │                   │ ew_2026-04-15.md │
+│ MemoryBank/change │ ../tasks/TASK_St │ broken            │ нет файла:       │
+│ log/2026-04-15_st │ ats_Review_2026- │                   │ ../tasks/TASK_St │
+│ ats_snr_integrati │ 04-15.md         │                   │ ats_Review_2026- │
+│ on.md:3           │                  │                   │ 04-15.md         │
+│ MemoryBank/change │ ../specs/review_ │ broken            │ нет файла:       │
+│ log/2026-04-15_st │ stats_2026-04-15 │                   │ ../specs/review_ │
+│ ats_snr_integrati │ .md              │                   │ stats_2026-04-15 │
+│ on.md:3           │                  │                   │ .md              │
+│ MemoryBank/change │ ../specs/review_ │ broken            │ нет файла:       │
+│ log/2026-04-15_st │ stats_2026-04-15 │                   │ ../specs/review_ │
+│ ats_snr_integrati │ .md              │                   │ stats_2026-04-15 │
+│ on.md:204         │                  │                   │ .md              │
+│ MemoryBank/change │ ../tasks/TASK_St │ broken            │ нет файла:       │
+│ log/2026-04-15_st │ ats_Review_2026- │                   │ ../tasks/TASK_St │
+│ ats_snr_integrati │ 04-15.md         │                   │ ats_Review_2026- │
+│ on.md:205         │                  │                   │ 04-15.md         │
+│ MemoryBank/change │ ../prompts/2026- │ broken            │ нет файла:       │
+│ log/2026-04-15_st │ 04-16_continue_c │                   │ ../prompts/2026- │
+│ ats_snr_integrati │ ore_spectrum.md  │                   │ 04-16_continue_c │
+│ on.md:207         │                  │                   │ ore_spectrum.md  │
+│ MemoryBank/feedba │ ../tasks/tensor_ │ broken            │ нет файла:       │
+│ ck/tensor_fft_P1_ │ fft_rewrite/TASK │                   │ ../tasks/tensor_ │
+│ verify_2026-07-21 │ _tensor_fft_P1_v │                   │ fft_rewrite/TASK │
+│ .md:3             │ erify_and_fix.md │                   │ _tensor_fft_P1_v │
+│                   │                  │                   │ erify_and_fix.md │
+│ MemoryBank/feedba │ ../tasks/tensor_ │ broken            │ нет файла:       │
+│ ck/tensor_fft_P1_ │ fft_rewrite/TASK │                   │ ../tasks/tensor_ │
+│ verify_2026-07-21 │ _tensor_fft_P1_l │                   │ fft_rewrite/TASK │
+│ .md:366           │ fm_chain_inplace │                   │ _tensor_fft_P1_l │
+│                   │ .md              │                   │ fm_chain_inplace │
+│                   │                  │                   │ .md              │
+│ MemoryBank/prompt │ https://huggingf │ broken (доступ    │ 401              │
+│ s/handoff_phase_b │ ace.co/settings/ │ закрыт?)          │                  │
+│ _next_session_202 │ tokens           │                   │                  │
+│ 6-05-14.md:57     │                  │                   │                  │
+│ MemoryBank/prompt │ ../tasks/TASK_RA │ broken            │ нет файла:       │
+│ s/handoff_session │ G_dataset_balanc │                   │ ../tasks/TASK_RA │
+│ _2026-05-09_morni │ e_2026-05-09.md  │                   │ G_dataset_balanc │
+│ ng.md:3           │                  │                   │ e_2026-05-09.md  │
+│ MemoryBank/sessio │ ../../../core/CM │ broken            │ нет файла:       │
+│ ns/2026-04-23.md: │ akeLists.txt     │                   │ ../../../core/CM │
+│ 31                │                  │                   │ akeLists.txt     │
+│ MemoryBank/sessio │ ../../../core/te │ broken            │ нет файла:       │
+│ ns/2026-04-23.md: │ sts/test_storage │                   │ ../../../core/te │
+│ 45                │ _services.hpp    │                   │ sts/test_storage │
+│                   │                  │                   │ _services.hpp    │
+│ MemoryBank/sessio │ ../../../core/to │ broken            │ нет файла:       │
+│ ns/2026-04-23.md: │ ols/dsp_cache_li │                   │ ../../../core/to │
+│ 57                │ st.cpp           │                   │ ols/dsp_cache_li │
+│                   │                  │                   │ st.cpp           │
+│ MemoryBank/sessio │ ../../../core/to │ broken            │ нет файла:       │
+│ ns/2026-04-23.md: │ ols/README.md    │                   │ ../../../core/to │
+│ 57                │                  │                   │ ols/README.md    │
+│ MemoryBank/sessio │ ../tasks/TASK_py │ broken            │ нет файла:       │
+│ ns/2026-05-04.md: │ thon_migration_p │                   │ ../tasks/TASK_py │
+│ 19                │ hase_B_FAILS_202 │                   │ thon_migration_p │
+│                   │ 6-05-04.md       │                   │ hase_B_FAILS_202 │
+│                   │                  │                   │ 6-05-04.md       │
+│ MemoryBank/sessio │ ../tasks/TASK_py │ broken            │ нет файла:       │
+│ ns/2026-05-19.md: │ thon_migration_p │                   │ ../tasks/TASK_py │
+│ 73                │ hase_B_debian_20 │                   │ thon_migration_p │
+│                   │ 26-05-03.md      │                   │ hase_B_debian_20 │
+│                   │                  │                   │ 26-05-03.md      │
+│ MemoryBank/sessio │ ../tasks/TASK_py │ broken            │ нет файла:       │
+│ ns/2026-05-19.md: │ thon_migration_p │                   │ ../tasks/TASK_py │
+│ 74                │ hase_B_FAILS_202 │                   │ thon_migration_p │
+│                   │ 6-05-04.md       │                   │ hase_B_FAILS_202 │
+│                   │                  │                   │ 6-05-04.md       │
+│ MemoryBank/sessio │ ../tasks/TASK_py │ broken            │ нет файла:       │
+│ ns/2026-05-21.md: │ thon_migration_p │                   │ ../tasks/TASK_py │
+│ 76                │ hase_B_debian_20 │                   │ thon_migration_p │
+│                   │ 26-05-03.md      │                   │ hase_B_debian_20 │
+│                   │                  │                   │ 26-05-03.md      │
+│ MemoryBank/sessio │ ../tasks/TASK_py │ broken            │ нет файла:       │
+│ ns/2026-05-21.md: │ thon_migration_p │                   │ ../tasks/TASK_py │
+│ 77                │ hase_B_FAILS_202 │                   │ thon_migration_p │
+│                   │ 6-05-04.md       │                   │ hase_B_FAILS_202 │
+│                   │                  │                   │ 6-05-04.md       │
+│ MemoryBank/sessio │ ../specs/phase6_ │ broken            │ нет файла:       │
+│ ns/2026-05-28.md: │ FINAL_2026-05-28 │                   │ ../specs/phase6_ │
+│ 25                │ .md              │                   │ FINAL_2026-05-28 │
+│                   │                  │                   │ .md              │
+│ MemoryBank/sessio │ ../tasks/tensor_ │ broken            │ нет файла:       │
+│ ns/2026-07-21.md: │ fft_rewrite/TASK │                   │ ../tasks/tensor_ │
+│ 48                │ _tfft_rewrite_E0 │                   │ fft_rewrite/TASK │
+│                   │ _0_karkas.md     │                   │ _tfft_rewrite_E0 │
+│                   │                  │                   │ _0_karkas.md     │
+│ MemoryBank/specs/ │ LLM_and_RAG/00_M │ broken            │ нет файла:       │
+│ Header_Comment_Fo │ aster_Plan_2026- │                   │ LLM_and_RAG/00_M │
+│ rmat_Plan_2026-05 │ 04-30.md         │                   │ aster_Plan_2026- │
+│ -01.md:3          │                  │                   │ 04-30.md         │
+│ MemoryBank/specs/ │ LLM_and_RAG/prom │ broken            │ нет файла:       │
+│ Header_Comment_Fo │ pts/001_index_cl │                   │ LLM_and_RAG/prom │
+│ rmat_Plan_2026-05 │ ass_summary.md   │                   │ pts/001_index_cl │
+│ -01.md:3          │                  │                   │ ass_summary.md   │
+│ MemoryBank/specs/ │ ../tasks/TASK_He │ broken            │ нет файла:       │
+│ Header_Comment_Fo │ aderCommentForma │                   │ ../tasks/TASK_He │
+│ rmat_Plan_2026-05 │ t_2026-05-01.md  │                   │ aderCommentForma │
+│ -01.md:3          │                  │                   │ t_2026-05-01.md  │
+│ MemoryBank/specs/ │ https://image-pp │ broken (доступ    │ 403              │
+│ circular_aperture │ ubs.uspto.gov/di │ закрыт?)          │                  │
+│ _fft_2026-08-11.m │ rsearch-public/p │                   │                  │
+│ d:49              │ rint/downloadPdf │                   │                  │
+│                   │ /10613411        │                   │                  │
+│ MemoryBank/specs/ │ https://www.anal │ timeout           │ нет ответа за    │
+│ circular_aperture │ og.com/en/resour │                   │ 2000 мс          │
+│ _fft_2026-08-11.m │ ces/analog-dialo │                   │                  │
+│ d:101             │ gue/articles/pha │                   │                  │
+│                   │ sed-array-antenn │                   │                  │
+│                   │ a-patterns-part3 │                   │                  │
+│                   │ .html            │                   │                  │
+│ MemoryBank/specs/ │ https://image-pp │ broken (доступ    │ 403              │
+│ circular_aperture │ ubs.uspto.gov/di │ закрыт?)          │                  │
+│ _fft_2026-08-11.m │ rsearch-public/p │                   │                  │
+│ d:103             │ rint/downloadPdf │                   │                  │
+│                   │ /10613411        │                   │                  │
+│ MemoryBank/specs/ │ https://image-pp │ broken (доступ    │ 403              │
+│ circular_aperture │ ubs.uspto.gov/di │ закрыт?)          │                  │
+│ _fft_2026-08-11.m │ rsearch-public/p │                   │                  │
+│ d:103             │ rint/downloadPdf │                   │                  │
+│                   │ /6437738         │                   │                  │
+│ MemoryBank/specs/ │ https://gitlab.k │ broken (доступ    │ 403              │
+│ cmake_git_aware_b │ itware.com/cmake │ закрыт?)          │                  │
+│ uild_REVIEW.md:18 │ /cmake/-/issues/ │                   │                  │
+│ 6                 │ 20892            │                   │                  │
+│ MemoryBank/specs/ │ doc_rag_patterns │ broken            │ нет файла:       │
+│ doc_inventory_202 │ _analysis_2026-0 │                   │ doc_rag_patterns │
+│ 6-06-19.md:3      │ 6-19.md          │                   │ _analysis_2026-0 │
+│                   │                  │                   │ 6-19.md          │
+│ MemoryBank/specs/ │ https://dl.acm.o │ broken (доступ    │ 403              │
+│ gpu_algo_fft_gemm │ rg/doi/10.1145/3 │ закрыт?)          │                  │
+│ _2026-06-21.md:72 │ 712285.3759772   │                   │                  │
+│ MemoryBank/specs/ │ ../../../linalg/ │ broken            │ нет заголовка с  │
+│ python/api_refere │ python/py_vector │                   │ якорем           │
+│ nce_2026-04-30.md │ _algebra_rocm.hp │                   │ «L139-L143» в    │
+│ :129              │ p#L139-L143      │                   │ py_vector_algebr │
+│                   │                  │                   │ a_rocm.hpp       │
+│ MemoryBank/specs/ │ ../../.future/TA │ broken            │ нет файла:       │
+│ python/legacy_to_ │ SK_script_dsl_ro │                   │ ../../.future/TA │
+│ dsp_gpu_mapping_2 │ cm.md            │                   │ SK_script_dsl_ro │
+│ 026-04-30.md:38   │                  │                   │ cm.md            │
+│ MemoryBank/specs/ │ ../../../heterod │ broken            │ нет заголовка с  │
+│ python/migration_ │ yne/python/py_he │                   │ якорем «L39-L55» │
+│ plan_2026-04-29.m │ terodyne_rocm.hp │                   │ в                │
+│ d:278             │ p#L39-L55        │                   │ py_heterodyne_ro │
+│                   │                  │                   │ cm.hpp           │
+│ MemoryBank/specs/ │ ../../../heterod │ broken            │ нет заголовка с  │
+│ python/migration_ │ yne/python/py_he │                   │ якорем «L39-L55» │
+│ plan_review_2026- │ terodyne_rocm.hp │                   │ в                │
+│ 04-30.md:66       │ p#L39-L55        │                   │ py_heterodyne_ro │
+│                   │                  │                   │ cm.hpp           │
+│ MemoryBank/specs/ │ ../../tasks/TASK │ broken            │ нет файла:       │
+│ python/sub_repo_t │ _python_migratio │                   │ ../../tasks/TASK │
+│ ests_diff_2026-04 │ n_phase_A_2026-0 │                   │ _python_migratio │
+│ -30.md:3          │ 4-30.md          │                   │ n_phase_A_2026-0 │
+│                   │                  │                   │ 4-30.md          │
+│ MemoryBank/tasks/ │ tensor_fft_rewri │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:82 │ te/HANDOFF_2026- │                   │ tensor_fft_rewri │
+│                   │ 07-21_pre_angula │                   │ te/HANDOFF_2026- │
+│                   │ r_profile.md     │                   │ 07-21_pre_angula │
+│                   │                  │                   │ r_profile.md     │
+│ MemoryBank/tasks/ │ tensor_fft_rewri │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:10 │ te/TASK_tensor_f │                   │ tensor_fft_rewri │
+│ 1                 │ ft_P1_verify_and │                   │ te/TASK_tensor_f │
+│                   │ _fix.md          │                   │ ft_P1_verify_and │
+│                   │                  │                   │ _fix.md          │
+│ MemoryBank/tasks/ │ tensor_fft_rewri │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:10 │ te/TASK_tensor_f │                   │ tensor_fft_rewri │
+│ 2                 │ ft_P1_lfm_chain_ │                   │ te/TASK_tensor_f │
+│                   │ inplace.md       │                   │ ft_P1_lfm_chain_ │
+│                   │                  │                   │ inplace.md       │
+│ MemoryBank/tasks/ │ TASK_llm_router_ │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:16 │ phase0.md        │                   │ TASK_llm_router_ │
+│ 7                 │                  │                   │ phase0.md        │
+│ MemoryBank/tasks/ │ ../specs/llm_rou │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:16 │ ter_architecture │                   │ ../specs/llm_rou │
+│ 7                 │ _2026-06-07.md   │                   │ ter_architecture │
+│                   │                  │                   │ _2026-06-07.md   │
+│ MemoryBank/tasks/ │ TASK_FINETUNE_ph │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:62 │ ase_B_2026-05-12 │                   │ TASK_FINETUNE_ph │
+│ 3                 │ .md              │                   │ ase_B_2026-05-12 │
+│                   │                  │                   │ .md              │
+│ MemoryBank/tasks/ │ TASK_RAG_schema_ │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:62 │ migration_2026-0 │                   │ TASK_RAG_schema_ │
+│ 4                 │ 5-08.md          │                   │ migration_2026-0 │
+│                   │                  │                   │ 5-08.md          │
+│ MemoryBank/tasks/ │ TASK_RAG_test_pa │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:62 │ rams_fill_2026-0 │                   │ TASK_RAG_test_pa │
+│ 5                 │ 5-08.md          │                   │ rams_fill_2026-0 │
+│                   │                  │                   │ 5-08.md          │
+│ MemoryBank/tasks/ │ TASK_RAG_doxygen │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:62 │ _test_parser_202 │                   │ TASK_RAG_doxygen │
+│ 6                 │ 6-05-08.md       │                   │ _test_parser_202 │
+│                   │                  │                   │ 6-05-08.md       │
+│ MemoryBank/tasks/ │ TASK_RAG_hybrid_ │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:62 │ upgrade_2026-05- │                   │ TASK_RAG_hybrid_ │
+│ 7                 │ 08.md            │                   │ upgrade_2026-05- │
+│                   │                  │                   │ 08.md            │
+│ MemoryBank/tasks/ │ TASK_RAG_mcp_ato │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:62 │ mic_tools_2026-0 │                   │ TASK_RAG_mcp_ato │
+│ 8                 │ 5-08.md          │                   │ mic_tools_2026-0 │
+│                   │                  │                   │ 5-08.md          │
+│ MemoryBank/tasks/ │ TASK_RAG_context │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:62 │ _pack_2026-05-08 │                   │ TASK_RAG_context │
+│ 9                 │ .md              │                   │ _pack_2026-05-08 │
+│                   │                  │                   │ .md              │
+│ MemoryBank/tasks/ │ TASK_RAG_code_em │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:63 │ beddings_2026-05 │                   │ TASK_RAG_code_em │
+│ 0                 │ -08.md           │                   │ beddings_2026-05 │
+│                   │                  │                   │ -08.md           │
+│ MemoryBank/tasks/ │ TASK_RAG_late_ch │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:63 │ unking_2026-05-0 │                   │ TASK_RAG_late_ch │
+│ 1                 │ 8.md             │                   │ unking_2026-05-0 │
+│                   │                  │                   │ 8.md             │
+│ MemoryBank/tasks/ │ TASK_RAG_telemet │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:63 │ ry_2026-05-08.md │                   │ TASK_RAG_telemet │
+│ 2                 │                  │                   │ ry_2026-05-08.md │
+│ MemoryBank/tasks/ │ TASK_RAG_graph_e │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:63 │ xtension_2026-05 │                   │ TASK_RAG_graph_e │
+│ 3                 │ -08.md           │                   │ xtension_2026-05 │
+│                   │                  │                   │ -08.md           │
+│ MemoryBank/tasks/ │ TASK_RAG_eval_ex │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:63 │ tension_2026-05- │                   │ TASK_RAG_eval_ex │
+│ 4                 │ 08.md            │                   │ tension_2026-05- │
+│                   │                  │                   │ 08.md            │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:63 │ _balance_2026-05 │                   │ TASK_RAG_dataset │
+│ 7                 │ -09.md           │                   │ _balance_2026-05 │
+│                   │                  │                   │ -09.md           │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:63 │ _test_params_pai │                   │ TASK_RAG_dataset │
+│ 8                 │ rs_2026-05-09.md │                   │ _test_params_pai │
+│                   │                  │                   │ rs_2026-05-09.md │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:63 │ _pybind_bridge_2 │                   │ TASK_RAG_dataset │
+│ 9                 │ 026-05-09.md     │                   │ _pybind_bridge_2 │
+│                   │                  │                   │ 026-05-09.md     │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:64 │ _doc_rich_2026-0 │                   │ TASK_RAG_dataset │
+│ 0                 │ 5-09.md          │                   │ _doc_rich_2026-0 │
+│                   │                  │                   │ 5-09.md          │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:64 │ _namespace_files │                   │ TASK_RAG_dataset │
+│ 1                 │ _2026-05-09.md   │                   │ _namespace_files │
+│                   │                  │                   │ _2026-05-09.md   │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:65 │ _hip_kernels_202 │                   │ TASK_RAG_dataset │
+│ 3                 │ 6-05-10.md       │                   │ _hip_kernels_202 │
+│                   │                  │                   │ 6-05-10.md       │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:65 │ _test_overview_2 │                   │ TASK_RAG_dataset │
+│ 4                 │ 026-05-10.md     │                   │ _test_overview_2 │
+│                   │                  │                   │ 026-05-10.md     │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:65 │ _membank_specs_e │                   │ TASK_RAG_dataset │
+│ 5                 │ xt_2026-05-10.md │                   │ _membank_specs_e │
+│                   │                  │                   │ xt_2026-05-10.md │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:65 │ _agent_examples_ │                   │ TASK_RAG_dataset │
+│ 6                 │ 2026-05-10.md    │                   │ _agent_examples_ │
+│                   │                  │                   │ 2026-05-10.md    │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:65 │ _prompts_changel │                   │ TASK_RAG_dataset │
+│ 7                 │ og_2026-05-10.md │                   │ _prompts_changel │
+│                   │                  │                   │ og_2026-05-10.md │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:65 │ _acк_advanced_20 │                   │ TASK_RAG_dataset │
+│ 8                 │ 26-05-10.md      │                   │ _acк_advanced_20 │
+│                   │                  │                   │ 26-05-10.md      │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:65 │ _build_test_infr │                   │ TASK_RAG_dataset │
+│ 9                 │ a_2026-05-10.md  │                   │ _build_test_infr │
+│                   │                  │                   │ a_2026-05-10.md  │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:66 │ _explicit_patter │                   │ TASK_RAG_dataset │
+│ 0                 │ ns_2026-05-10.md │                   │ _explicit_patter │
+│                   │                  │                   │ ns_2026-05-10.md │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:66 │ _patterns_md_202 │                   │ TASK_RAG_dataset │
+│ 1                 │ 6-05-10.md       │                   │ _patterns_md_202 │
+│                   │                  │                   │ 6-05-10.md       │
+│ MemoryBank/tasks/ │ ../specs/LLM_and │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:66 │ _RAG/phase_b_dat │                   │ ../specs/LLM_and │
+│ 4                 │ aset_prep_2026-0 │                   │ _RAG/phase_b_dat │
+│                   │ 5-10.md          │                   │ aset_prep_2026-0 │
+│                   │                  │                   │ 5-10.md          │
+│ MemoryBank/tasks/ │ ../specs/LLM_and │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:66 │ _RAG/smoke_2080t │                   │ ../specs/LLM_and │
+│ 6                 │ i_2026-05-10_PAS │                   │ _RAG/smoke_2080t │
+│                   │ SED.md           │                   │ i_2026-05-10_PAS │
+│                   │                  │                   │ SED.md           │
+│ MemoryBank/tasks/ │ TASK_RAG_claude_ │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:66 │ md_c4_tags_2026- │                   │ TASK_RAG_claude_ │
+│ 7                 │ 05-09.md         │                   │ md_c4_tags_2026- │
+│                   │                  │                   │ 05-09.md         │
+│ MemoryBank/tasks/ │ TASK_RAG_arch_fi │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:66 │ les_per_repo_202 │                   │ TASK_RAG_arch_fi │
+│ 8                 │ 6-05-09.md       │                   │ les_per_repo_202 │
+│                   │                  │                   │ 6-05-09.md       │
+│ MemoryBank/tasks/ │ TASK_RAG_dataset │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:66 │ _generation_for_ │                   │ TASK_RAG_dataset │
+│ 9                 │ qlora_2026-05-08 │                   │ _generation_for_ │
+│                   │ .md              │                   │ qlora_2026-05-08 │
+│                   │                  │                   │ .md              │
+│ MemoryBank/tasks/ │ TASK_RAG_context │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:67 │ _fuel_2026-05-08 │                   │ TASK_RAG_context │
+│ 1                 │ .md              │                   │ _fuel_2026-05-08 │
+│                   │                  │                   │ .md              │
+│ MemoryBank/tasks/ │ TASK_remove_open │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:67 │ cl_pybind_2026-0 │                   │ TASK_remove_open │
+│ 7                 │ 5-06.md          │                   │ cl_pybind_2026-0 │
+│                   │                  │                   │ 5-06.md          │
+│ MemoryBank/tasks/ │ TASK_python_migr │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:67 │ ation_phase_B_de │                   │ TASK_python_migr │
+│ 8                 │ bian_2026-05-03. │                   │ ation_phase_B_de │
+│                   │ md               │                   │ bian_2026-05-03. │
+│                   │                  │                   │ md               │
+│ MemoryBank/tasks/ │ TASK_KernelCache │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:67 │ _v2_Closeout_202 │                   │ TASK_KernelCache │
+│ 9                 │ 6-04-27.md       │                   │ _v2_Closeout_202 │
+│                   │                  │                   │ 6-04-27.md       │
+│ MemoryBank/tasks/ │ TASK_Profiler_v2 │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:68 │ _INDEX.md        │                   │ TASK_Profiler_v2 │
+│ 0                 │                  │                   │ _INDEX.md        │
+│ MemoryBank/tasks/ │ TASK_validators_ │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:68 │ port_from_GPUWor │                   │ TASK_validators_ │
+│ 1                 │ kLib_2026-05-03. │                   │ port_from_GPUWor │
+│                   │ md               │                   │ kLib_2026-05-03. │
+│                   │                  │                   │ md               │
+│ MemoryBank/tasks/ │ TASK_validators_ │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:68 │ linalg_pilot_202 │                   │ TASK_validators_ │
+│ 2                 │ 6-05-04.md       │                   │ linalg_pilot_202 │
+│                   │                  │                   │ 6-05-04.md       │
+│ MemoryBank/tasks/ │ TASK_RAG_agentic │ broken            │ нет файла:       │
+│ IN_PROGRESS.md:69 │ _loop_2026-05-08 │                   │ TASK_RAG_agentic │
+│ 0                 │ .md              │                   │ _loop_2026-05-08 │
+│                   │                  │                   │ .md              │
+│ MemoryBank/tasks/ │ HANDOFF_2026-07- │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ 21_pre_angular_p │                   │ HANDOFF_2026-07- │
+│ e/NOTES_2026-07-2 │ rofile.md        │                   │ 21_pre_angular_p │
+│ 2_profil_cepochka │                  │                   │ rofile.md        │
+│ _i_antivranyo.md: │                  │                   │                  │
+│ 3                 │                  │                   │                  │
+│ MemoryBank/tasks/ │ ../../sessions/2 │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ 026-07-21.md     │                   │ ../../sessions/2 │
+│ e/_superseded/HAN │                  │                   │ 026-07-21.md     │
+│ DOFF_2026-07-21_p │                  │                   │                  │
+│ re_angular_profil │                  │                   │                  │
+│ e.md:3            │                  │                   │                  │
+│ MemoryBank/tasks/ │ ../../specs/rada │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ r_3dfft_tensor_c │                   │ ../../specs/rada │
+│ e/_superseded/TAS │ ores_2026-07-19. │                   │ r_3dfft_tensor_c │
+│ K_tensor_fft_P1_l │ md               │                   │ ores_2026-07-19. │
+│ fm_chain_inplace. │                  │                   │ md               │
+│ md:3              │                  │                   │                  │
+│ MemoryBank/tasks/ │ ../../feedback/t │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ ensor_fft_P1_ver │                   │ ../../feedback/t │
+│ e/_superseded/TAS │ ify_2026-07-21.m │                   │ ensor_fft_P1_ver │
+│ K_tensor_fft_P1_l │ d                │                   │ ify_2026-07-21.m │
+│ fm_chain_inplace. │                  │                   │ d                │
+│ md:3              │                  │                   │                  │
+│ MemoryBank/tasks/ │ ../../feedback/t │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ ensor_fft_P1_ver │                   │ ../../feedback/t │
+│ e/_superseded/TAS │ ify_2026-07-21.m │                   │ ensor_fft_P1_ver │
+│ K_tensor_fft_P1_l │ d                │                   │ ify_2026-07-21.m │
+│ fm_chain_inplace. │                  │                   │ d                │
+│ md:162            │                  │                   │                  │
+│ MemoryBank/tasks/ │ ../../specs/rada │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ r_3dfft_tensor_c │                   │ ../../specs/rada │
+│ e/_superseded/TAS │ ores_2026-07-19. │                   │ r_3dfft_tensor_c │
+│ K_tensor_fft_P1_v │ md               │                   │ ores_2026-07-19. │
+│ erify_and_fix.md: │                  │                   │ md               │
+│ 7                 │                  │                   │                  │
+│ MemoryBank/tasks/ │ _archive_p1/TASK │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ _tensor_fft_P1_0 │                   │ _archive_p1/TASK │
+│ e/_superseded/TAS │ 0_INDEX.md       │                   │ _tensor_fft_P1_0 │
+│ K_tensor_fft_P1_v │                  │                   │ 0_INDEX.md       │
+│ erify_and_fix.md: │                  │                   │                  │
+│ 7                 │                  │                   │                  │
+│ MemoryBank/tasks/ │ _archive_p1/TASK │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ _tensor_fft_P1_d │                   │ _archive_p1/TASK │
+│ e/_superseded/TAS │ ebug_rx9070.md   │                   │ _tensor_fft_P1_d │
+│ K_tensor_fft_P1_v │                  │                   │ ebug_rx9070.md   │
+│ erify_and_fix.md: │                  │                   │                  │
+│ 7                 │                  │                   │                  │
+│ MemoryBank/tasks/ │ _archive_p1/TASK │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ _tensor_fft_P1_d │                   │ _archive_p1/TASK │
+│ e/_superseded/TAS │ ebug_rx9070.md   │                   │ _tensor_fft_P1_d │
+│ K_tensor_fft_P1_v │                  │                   │ ebug_rx9070.md   │
+│ erify_and_fix.md: │                  │                   │                  │
+│ 168               │                  │                   │                  │
+│ MemoryBank/tasks/ │ TASK_tfft_rewrit │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ e_00_INDEX.md    │                   │ TASK_tfft_rewrit │
+│ e/_superseded/TAS │                  │                   │ e_00_INDEX.md    │
+│ K_tfft_rewrite_E0 │                  │                   │                  │
+│ _0_karkas.md:3    │                  │                   │                  │
+│ MemoryBank/tasks/ │ TASK_tfft_rewrit │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ e_00_INDEX.md    │                   │ TASK_tfft_rewrit │
+│ e/_superseded/TAS │                  │                   │ e_00_INDEX.md    │
+│ K_tfft_rewrite_E1 │                  │                   │                  │
+│ _kernel_16x16.md: │                  │                   │                  │
+│ 3                 │                  │                   │                  │
+│ MemoryBank/tasks/ │ TASK_tfft_rewrit │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ e_00_INDEX.md    │                   │ TASK_tfft_rewrit │
+│ e/_superseded/TAS │                  │                   │ e_00_INDEX.md    │
+│ K_tfft_rewrite_E2 │                  │                   │                  │
+│ _fourstep.md:3    │                  │                   │                  │
+│ MemoryBank/tasks/ │ TASK_s5_optimiza │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ tion_continue_20 │                   │ TASK_s5_optimiza │
+│ e/_superseded/TAS │ 26-07-21.md      │                   │ tion_continue_20 │
+│ K_tfft_rewrite_E2 │                  │                   │ 26-07-21.md      │
+│ _fourstep.md:3    │                  │                   │                  │
+│ MemoryBank/tasks/ │ TASK_tfft_rewrit │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ e_00_INDEX.md    │                   │ TASK_tfft_rewrit │
+│ e/_superseded/TAS │                  │                   │ e_00_INDEX.md    │
+│ K_tfft_rewrite_E3 │                  │                   │                  │
+│ _vs_beamfft.md:3  │                  │                   │                  │
+│ MemoryBank/tasks/ │ TASK_tfft_rewrit │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ e_00_INDEX.md    │                   │ TASK_tfft_rewrit │
+│ e/_superseded/TAS │                  │                   │ e_00_INDEX.md    │
+│ K_tfft_rewrite_E4 │                  │                   │                  │
+│ _s1_inplace.md:3  │                  │                   │                  │
+│ MemoryBank/tasks/ │ TASK_tfft_rewrit │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ e_00_INDEX.md    │                   │ TASK_tfft_rewrit │
+│ e/_superseded/TAS │                  │                   │ e_00_INDEX.md    │
+│ K_tfft_rewrite_E5 │                  │                   │                  │
+│ _s5s7_gpu.md:3    │                  │                   │                  │
+│ MemoryBank/tasks/ │ TASK_tfft_rewrit │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ e_00_INDEX.md    │                   │ TASK_tfft_rewrit │
+│ e/_superseded/TAS │                  │                   │ e_00_INDEX.md    │
+│ K_tfft_rewrite_E6 │                  │                   │                  │
+│ _infra.md:3       │                  │                   │                  │
+│ MemoryBank/tasks/ │ TASK_tfft_rewrit │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ e_00_INDEX.md    │                   │ TASK_tfft_rewrit │
+│ e/_superseded/TAS │                  │                   │ e_00_INDEX.md    │
+│ K_tfft_rewrite_E7 │                  │                   │                  │
+│ _hipgraph.md:3    │                  │                   │                  │
+│ MemoryBank/tasks/ │ TASK_tfft_rewrit │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ e_00_INDEX.md    │                   │ TASK_tfft_rewrit │
+│ e/_superseded/TAS │                  │                   │ e_00_INDEX.md    │
+│ K_tfft_rewrite_E8 │                  │                   │                  │
+│ _lfm_chain.md:3   │                  │                   │                  │
+│ MemoryBank/tasks/ │ TASK_tfft_rewrit │ broken            │ нет файла:       │
+│ tensor_fft_rewrit │ e_00_INDEX.md    │                   │ TASK_tfft_rewrit │
+│ e/_superseded/TAS │                  │                   │ e_00_INDEX.md    │
+│ K_tfft_rewrite_E9 │                  │                   │                  │
+│ _chunking.md:3    │                  │                   │                  │
+└───────────────────┴──────────────────┴───────────────────┴──────────────────┘

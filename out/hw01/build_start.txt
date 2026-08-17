@@ -1,0 +1,4 @@
+start=2026-08-16 19:07:22
+session=/c/Users/user/.claude/projects/E--MikhailTraining/b29e0d90-6588-4107-894c-b6a69213d25b.jsonl
+offset_lines=164
+subagents_before=

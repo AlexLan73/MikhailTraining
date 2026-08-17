@@ -88,6 +88,9 @@
 
 ## Как запустить
 
+> Готовые отчёты реальных прогонов, метрики и токены — в [`results/`](results/README.md);
+> все параметры конфигурации — [`mdscan.example.yaml`](mdscan.example.yaml) и `Doc/Modules/mdscan/CLI.md`.
+
 Установка зависимостей ДЗ (`markdown-it-py`, `linkify-it-py`, `mdit-py-plugins`, `GitPython`,
 `PyYAML`, `rich`) вместе с dev-набором:
 

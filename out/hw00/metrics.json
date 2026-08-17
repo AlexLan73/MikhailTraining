@@ -1,0 +1,14 @@
+{
+  "hw_id": "hw00",
+  "title": "Образец: сквозной прогон каркаса (baseline vs порог)",
+  "metrics": {
+    "accuracy_baseline": 0.5,
+    "accuracy_model": 0.91,
+    "f1_model": 0.9108910891089109,
+    "threshold": 0.9917537768511722,
+    "n_train": 300.0,
+    "n_test": 100.0
+  },
+  "seconds": 0.01,
+  "notes": []
+}
