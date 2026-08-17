@@ -55,6 +55,7 @@ class HttpChecker:
         """Заполнить статус и `http_code` ссылки по ответу сервера."""
         url = link.target
         outcome = self._cached(url)
+        from_cache = outcome is not None
         if outcome is None:
             outcome = self._probe(url)
             self._remember(url, outcome)
@@ -63,10 +64,25 @@ class HttpChecker:
         link.http_code = code
         link.detail = detail
         self._notifier.show(f"[http] {code} {url}")
+        self._log_outcome(url, md_file, outcome, from_cache=from_cache)
+
+    @staticmethod
+    def _log_outcome(url: str, md_file: Path, outcome: _Outcome, *, from_cache: bool) -> None:
+        """Исход ссылки — только `DEBUG`; попадание в кэш отличимо от сетевого вызова.
+
+        `WARNING` на битую ссылку пишет `MarkdownWorker._log_link` — один раз и с
+        полями `repo`/`file`; дублировать его здесь значило бы две строки на ссылку (H-06).
+        Отдельная строка `http cache` нужна, чтобы по логу было видно, что второй
+        такой же адрес сети не касался (инвариант 22).
+        """
+        if not _log.isEnabledFor(logging.DEBUG):
+            return
+        status, code, detail = outcome
+        prefix = "http cache" if from_cache else "http"
         if status is CheckStatus.OK:
-            _log.debug("http %s %s (из %s)", code, url, md_file.name)
+            _log.debug("%s %s %s (из %s)", prefix, code, url, md_file.name)
         else:
-            _log.warning("http %s %s: %s (из %s)", status.value, url, detail or code, md_file)
+            _log.debug("%s %s %s: %s (из %s)", prefix, status.value, url, detail or code, md_file)
 
     def _cached(self, url: str) -> _Outcome | None:
         """Готовый исход для адреса, если кэш включён и адрес уже проверялся."""
@@ -116,5 +132,5 @@ class HttpChecker:
 
     def _timed_out(self, url: str) -> _Outcome:
         """`TIMEOUT` отделён от `BROKEN`: по нему видно, не мал ли `http.timeout_ms`."""
-        _log.warning("нет ответа за %.0f мс: %s", self._timeout_sec * 1000, url)
+        _log.debug("нет ответа за %.0f мс: %s", self._timeout_sec * 1000, url)
         return CheckStatus.TIMEOUT, 0, f"нет ответа за {self._timeout_sec * 1000:.0f} мс"

@@ -10,9 +10,11 @@ from __future__ import annotations
 
 import json
 import logging
+import queue
 import shutil
 import stat
 import subprocess
+import threading
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
@@ -23,7 +25,8 @@ import pytest
 from core.mdscan.config.config_draft import SOURCE_CMDLINE, ConfigDraft
 from core.mdscan.config.scan_config import ScanConfig, SourceConfig
 from core.mdscan.enums.source_kind import SourceKind
-from core.mdscan.errors import GitHubDiscoveryError, GitUnavailableError
+from core.mdscan.errors import GitHubDiscoveryError, GitUnavailableError, MdScanError
+from core.mdscan.models.repo_info import RepoInfo
 from core.mdscan.source.git_adapter import GitAdapter
 from core.mdscan.source.github_org_source import GitHubOrgSource
 from core.mdscan.source.local_path_source import LocalPathSource
@@ -31,6 +34,9 @@ from core.mdscan.source.remote_repo_source import RemoteRepoSource
 from core.mdscan.source.source_factory import SourceFactory
 
 SOURCE_LOGGER = "core.mdscan.source"
+
+#: Потолок ожидания в тестах с потоками: `join`/`wait` без таймаута вешают набор.
+WAIT_SEC = 5.0
 
 #: Тест 5 ТЗ: без бинарника git локальные репозитории не создать — пропускаем.
 requires_git = pytest.mark.skipif(
@@ -436,3 +442,168 @@ def test_factory_returns_empty_list_without_targets() -> None:
     config = ScanConfig.from_draft(ConfigDraft.from_defaults())
 
     assert SourceFactory(FakeGit(), _fail_gh, _fail_http).for_config(config) == []
+
+
+# ------------------------------------------------------- 10. параллельное клонирование (H-13)
+
+
+class BlockingGit(FakeGit):
+    """`FakeGit`, у которого `clone` ждёт разрешения; считает пиковую одновременность.
+
+    Позволяет увидеть, сколько клонов реально идёт в один момент, не полагаясь на `sleep`.
+    """
+
+    def __init__(self, gates: dict[str, threading.Event] | None = None) -> None:
+        super().__init__()
+        self._lock = threading.Lock()
+        self._gates = gates or {}
+        self._default_gate = threading.Event()
+        self.started = threading.Semaphore(0)
+        self.active = 0
+        self.peak = 0
+
+    def release_all(self) -> None:
+        """Разрешить все ожидающие (и будущие) клоны."""
+        self._default_gate.set()
+        for gate in self._gates.values():
+            gate.set()
+
+    def clone(self, url: str, dst: Path, depth: int) -> Path:
+        with self._lock:
+            self.active += 1
+            self.peak = max(self.peak, self.active)
+        self.started.release()
+        gate = self._gates.get(Path(dst).name, self._default_gate)
+        assert gate.wait(timeout=WAIT_SEC), f"клон {dst} не был разрешён за {WAIT_SEC} с"
+        with self._lock:
+            self.active -= 1
+        return super().clone(url, dst, depth)
+
+
+def _org_with(git: Any, names: Sequence[str], clone_workers: int, tmp_path: Path) -> GitHubOrgSource:
+    """Источник-организация с заданным числом потоков клонирования."""
+
+    def run_gh(args: Sequence[str]) -> str:
+        return json.dumps([_gh_repo(name) for name in names])
+
+    config = _source_config(clone_dir=str(tmp_path / "clones"), keep_clones=False)
+    return GitHubOrgSource("https://github.com/org", config, run_gh, _fail_http, git, clone_workers)
+
+
+def _consume(source: GitHubOrgSource, sink: list[RepoInfo] | queue.Queue[RepoInfo]) -> threading.Thread:
+    """Потреблять `repositories()` в отдельном потоке (генератор ленивый — он блокирует)."""
+
+    def worker() -> None:
+        for info in source.repositories():
+            sink.put(info) if isinstance(sink, queue.Queue) else sink.append(info)
+
+    thread = threading.Thread(target=worker, name="consumer", daemon=True)
+    thread.start()
+    return thread
+
+
+@pytest.mark.parametrize(
+    ("clone_workers", "expected_peak"),
+    [
+        pytest.param(3, 3, id="clone_workers=3 → три клона одновременно"),
+        pytest.param(1, 1, id="clone_workers=1 → строго по одному"),
+    ],
+)
+def test_org_clones_repositories_in_parallel(
+    tmp_path: Path, clone_workers: int, expected_peak: int
+) -> None:
+    """H-13: число одновременных клонов равно `clone_workers`, не единице."""
+    names = ["alpha", "beta", "gamma"]
+    git = BlockingGit()
+    source = _org_with(git, names, clone_workers, tmp_path)
+    collected: list[RepoInfo] = []
+    consumer = _consume(source, collected)
+
+    for _ in range(expected_peak):
+        assert git.started.acquire(timeout=WAIT_SEC), "клон не стартовал"
+    assert git.peak == expected_peak
+    # больше разрешённого числа потоков стартовать не должно
+    assert git.started.acquire(timeout=0.2) is False
+
+    git.release_all()
+    consumer.join(timeout=WAIT_SEC)
+
+    assert not consumer.is_alive()
+    assert git.peak == expected_peak
+    assert sorted(Path(info.root).name for info in collected) == [f"org__{name}" for name in names]
+
+
+def test_org_yields_repository_before_the_rest_are_cloned(tmp_path: Path) -> None:
+    """H-13: результат отдаётся по мере готовности — стадия 2 не ждёт последний клон."""
+    gates = {f"org__{name}": threading.Event() for name in ("alpha", "beta", "gamma")}
+    git = BlockingGit(gates)
+    source = _org_with(git, ["alpha", "beta", "gamma"], 3, tmp_path)
+    delivered: queue.Queue[RepoInfo] = queue.Queue()
+    consumer = _consume(source, delivered)
+
+    gates["org__beta"].set()  # разрешаем только один клон из трёх
+    first = delivered.get(timeout=WAIT_SEC)
+
+    assert Path(first.root).name == "org__beta"
+    assert delivered.empty()
+
+    git.release_all()
+    consumer.join(timeout=WAIT_SEC)
+    assert not consumer.is_alive()
+    assert delivered.qsize() == 2
+
+
+def test_org_skips_repository_whose_clone_failed(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
+    """H-13: падение одного клона логируется с трейсом, остальные репозитории отданы."""
+
+    class FailingGit(FakeGit):
+        def clone(self, url: str, dst: Path, depth: int) -> Path:
+            if Path(dst).name == "org__beta":
+                raise RuntimeError("клон сорвался")
+            return super().clone(url, dst, depth)
+
+    source = _org_with(FailingGit(), ["alpha", "beta", "gamma"], 3, tmp_path)
+
+    with caplog.at_level(logging.ERROR, logger=SOURCE_LOGGER):
+        collected = list(source.repositories())
+
+    assert sorted(Path(info.root).name for info in collected) == ["org__alpha", "org__gamma"]
+    failures = [record for record in caplog.records if record.exc_info is not None]
+    assert failures and any("beta" in record.getMessage() for record in failures)
+
+
+def test_org_cleanup_removes_parallel_and_partial_clones(tmp_path: Path) -> None:
+    """H-13: `cleanup()` убирает и полные клоны, и каталог оборвавшегося клона."""
+
+    class HalfWrittenGit(FakeGit):
+        def clone(self, url: str, dst: Path, depth: int) -> Path:
+            target = Path(dst)
+            if target.name == "org__beta":
+                (target / ".git").mkdir(parents=True, exist_ok=True)  # клон начался…
+                raise MdScanError("не удалось склонировать org/beta")  # …и оборвался
+            return super().clone(url, dst, depth)
+
+    clones = tmp_path / "clones"
+    source = _org_with(HalfWrittenGit(), ["alpha", "beta", "gamma"], 3, tmp_path)
+
+    list(source.repositories())
+    assert (clones / "org__beta").exists(), "частичный клон должен остаться до cleanup"
+
+    source.cleanup()
+
+    assert not list(clones.iterdir())
+
+
+def test_listed_md_raises_on_broken_repo_instead_of_empty_list(tmp_path: Path) -> None:
+    """H-08 (Д-H08-2): битый `.git` → исключение (finder откатится на обход), а не пустой список."""
+    import pytest
+    from git.exc import GitError
+
+    from core.mdscan.source.git_adapter import GitAdapter
+
+    broken = tmp_path / "broken"
+    broken.mkdir()
+    (broken / ".git").write_text("gitdir: /nowhere/at/all", encoding="utf-8")
+    (broken / "a.md").write_text("# a", encoding="utf-8")
+    with pytest.raises((GitError, OSError)):
+        GitAdapter().listed_md(broken, (".md",))

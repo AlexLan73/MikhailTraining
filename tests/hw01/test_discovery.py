@@ -309,3 +309,47 @@ def test_scope_limits_files_to_target_subdirectory(tmp_path: Path) -> None:
     repo = RepoInfo(root=root, scope=root / "docs")
     found = [p.relative_to(root.resolve()).as_posix() for p in finder.find(repo, [])]
     assert found == ["docs/a.md"]
+
+
+# --- H-05 (G-D): резолв пути — один вызов ОС на каталог, а не на файл ---------------------
+
+
+class _ResolveCounter:
+    """Считает вызовы `Path.resolve` — `resolve()` идёт в ОС и на 500 файлах стоит 0.06 с."""
+
+    def __init__(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        self.calls = 0
+        original = Path.resolve
+
+        def counted(path: Path, strict: bool = False) -> Path:
+            self.calls += 1
+            return original(path, strict=strict)
+
+        monkeypatch.setattr(Path, "resolve", counted)
+
+
+def test_registry_does_not_resolve_every_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Инвариант реестра: пути приходят абсолютные, резолвится только каталог (H-05, G-D)."""
+    repo_root = (tmp_path / "repo").resolve()
+    files = [repo_root / "docs" / f"f{number}.md" for number in range(200)]
+    registry = ProcessedRegistry()
+    counter = _ResolveCounter(monkeypatch)
+
+    accepted = [registry.add_if_absent((repo_root, md_file)) for md_file in files]
+
+    assert all(accepted), "все 200 файлов новые — дублей нет"
+    assert counter.calls == 2, f"ожидались 2 резолва (корень + каталог docs), было {counter.calls}"
+
+
+def test_finder_resolves_directories_not_files(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Обход резолвит каталоги, а не файлы: 50 файлов в двух каталогах → единицы вызовов ОС."""
+    root = tmp_path / "repo"
+    for number in range(50):
+        _write(root / ("docs" if number % 2 else "notes") / f"f{number}.md")
+    finder = _finder(include_nested=False)
+    counter = _ResolveCounter(monkeypatch)
+
+    found = list(finder.find(RepoInfo(root=root), []))
+
+    assert len(found) == 50, len(found)
+    assert counter.calls <= 5, f"каталогов три, резолвов {counter.calls} — резолв ушёл на файлы"

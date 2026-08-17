@@ -67,7 +67,8 @@ class MarkdownWorker(BaseObserver):
             rel_path=self._rel_path(task),
             thread_name=self.name,
         )
-        logger.debug("parse-start", extra=self._log_context(result))
+        if logger.isEnabledFor(logging.DEBUG):  # словарь контекста строится только при DEBUG (G4)
+            logger.debug("parse-start", extra=self._log_context(result))
         try:
             result.links = list(self._extractor.extract(self._reader.read(task.md_file)))
             self._check_links(result)
@@ -96,21 +97,29 @@ class MarkdownWorker(BaseObserver):
 
     @staticmethod
     def _log_link(link: MdLink, result: MdFileResult) -> None:
-        """Хорошая ссылка → `DEBUG`, битая или таймаут → `WARNING` (D2.1)."""
-        context = {"repo": result.repo.root.name, "file": result.rel_path}
-        message = "link %s kind=%s target=%s line=%d http=%d %s"
-        args = (
+        """Хорошая ссылка → `DEBUG`, битая или таймаут → `WARNING` (D2.1).
+
+        Здесь **единственная** запись `WARNING` на битую ссылку за прогон: чекеры
+        про свой исход пишут только `DEBUG` (H-06), иначе одна ссылка давала две
+        строки, а поля `repo`/`file` формата лога есть лишь тут.
+
+        Кортеж аргументов и словарь контекста строятся **после** проверки уровня:
+        при выключенном `DEBUG` целая ссылка не стоит ничего (гипотеза G4).
+        """
+        loud = link.status in _LOUD_STATUSES
+        if not loud and not logger.isEnabledFor(logging.DEBUG):
+            return
+        write = logger.warning if loud else logger.debug
+        write(
+            "link %s kind=%s target=%s line=%d http=%d %s",
             link.status.value,
             link.kind.value,
             link.target,
             link.line,
             link.http_code,
             link.detail,
+            extra={"repo": result.repo.root.name, "file": result.rel_path},
         )
-        if link.status in _LOUD_STATUSES:
-            logger.warning(message, *args, extra=context)
-        else:
-            logger.debug(message, *args, extra=context)
 
     @staticmethod
     def _log_context(result: MdFileResult) -> dict[str, str]:

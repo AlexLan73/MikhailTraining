@@ -245,9 +245,15 @@ def _escape(text: object) -> str:
     return str(text).replace("|", r"\|").replace("\r", " ").replace("\n", " ")
 
 
+#: Предел длины ячейки-цели: `data:`-URI на мегабайт (H-01/H-02) не должен раздувать отчёт.
+_MAX_CELL = 200
+
+
 def _code(text: object) -> str:
-    """Длинный путь/URL — в обратных кавычках: не ломает вёрстку и читается как код."""
+    """Длинный путь/URL — в обратных кавычках: не ломает вёрстку и читается как код; длиннее 200 — обрезаем."""
     inner = str(text).replace("|", r"\|").replace("`", "'")
+    if len(inner) > _MAX_CELL:
+        inner = f"{inner[:_MAX_CELL]}… (+{len(inner) - _MAX_CELL} симв.)"
     return f"`{inner}`"
 
 

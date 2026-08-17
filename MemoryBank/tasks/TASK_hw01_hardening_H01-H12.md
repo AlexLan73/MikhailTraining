@@ -5,7 +5,9 @@
 > **Архитектура**: [`hw01_mdscan_architecture_2026-08-16.md`](../specs/hw01_mdscan_architecture_2026-08-16.md)
 > **Скил-оркестрант**: `.claude/skills/hw01-build/SKILL.md`
 >
-> - **Дата**: 2026-08-17 · **Статус**: 🟡 черновик, Alex не читал · 🔧 **ревью 6** внесено
+> - **Дата**: 2026-08-17 · **Статус**: ✅ **выполнен 2026-08-17** — H-01…H-13 закрыты, все 13 тасков
+>   приняты оркестрантом; приёмку этапа ставит Alex. Итог и сводный список находок —
+>   [`TASK_hw01_mdlinks.md`](TASK_hw01_mdlinks.md). · 🔧 **ревью 6** внесено
 >   ([`hw01_mdscan_review6_fixes_2026-08-17.md`](../specs/hw01_mdscan_review6_fixes_2026-08-17.md)):
 >   H-01 сверен с уже выполненным боевым прогоном, H-04…H-07 переписаны под реальный профиль (спека §2),
 >   H-03/H-08 — тесты сети через `@pytest.mark.network` + `MDSCAN_NETWORK=1`, среда для агентов (§0.4)
@@ -383,6 +385,34 @@ frozen VO; `GitAdapter.submodules()` — не вызывается никем; `
 
 ---
 
+### H-13 · Параллельное клонирование репозиториев организации (добавлен по находке H-01, волна 2)
+
+**Зачем**: боевой прогон `dsp-gpu` — 10 клонов последовательно, 72.5 с из 103 с; `workers.discover` для организации
+не работал (пул параллелит по источникам, организация — один источник).
+
+**Что сделать**: внутри `GitHubOrgSource.repositories()` клоны через `ThreadPoolExecutor(workers.discover)`, отдача
+`RepoInfo` по мере готовности; ошибка одного клона → лог + пропуск; `cleanup()` — все клоны; тесты (пиковая
+одновременность, ошибка одного, cleanup); замер до/после на организации без HTTP. Контракт `RepositorySource` не меняется.
+Файлы: `core/mdscan/source/github_org_source.py`, `source_factory.py` (передать число потоков), `tests/hw01/test_source.py`.
+
+---
+
+### Дефекты волны 1 — что с ними (оркестрант, 2026-08-17)
+
+| # | Откуда | Дефект | Решение |
+|---|---|---|---|
+| Д-1 | H-01/H-02 | `data:image/…;base64` → LOCAL → ложный BROKEN, строка отчёта 1.8 МБ | ✅ исправлено оркестрантом: `OtherSchemeRule` (`data:`, `javascript:`, `ftp:`… → UNKNOWN → SKIPPED) перед `LocalPathRule`; ячейки отчёта обрезаются до 200 символов; 6 тестов |
+| Д-2 | H-01 | клоны организации последовательно | → **H-13** (волна 2) |
+| Д-3 | H-01 | WARNING дублируется (чекер + воркер) | → H-06 |
+| Д-4 | H-01/H-02 | `broken_total` включает TIMEOUT | по определению (`MdFileResult.broken_count` = BROKEN+TIMEOUT, T-01); в отчёте TIMEOUT отдельно — оставляем, задокументировать в H-12 |
+| Д-5 | H-02 | секция «Битые HTTP» пуста при `broken_http=7` (все ушли в 401/403/429) | косметика: в H-12 — подпись «см. секцию 401/403/429» или счётчик по секциям; правка отчёта в волне 3 оркестрантом |
+| Д-6 | H-01/H-03 | попадание в кэш HTTP неотличимо в логе | → H-06 |
+| Д-7 | H-02 | `std::string`/`af::array` из автодоков → битые локальные | ограничение классификатора (нет признака «это не путь»); в H-11 как известная находка, решение Alex |
+| Д-8 | H-02 | `include_nested_repos:true` подхватывает `.claude/worktrees/*` (git-worktree того же репо, в `.gitignore`) | в H-11/решение Alex: пропускать nested-корни, игнорируемые родителем (`git check-ignore`) |
+| Д-9 | H-03 | `http.timeout_ms` не покрывает DNS (`getaddrinfo` до 12 с) и не общий бюджет запроса (редиректы) | известное поведение `urllib`; в H-12 задокументировать; кандидат на `socket.setdefaulttimeout`/резолв в потоке — решение Alex |
+| Д-10 | H-01 | `duration_sec` не включает отрисовку консоли (7 с rich на 634 строки) | ожидаемо (D6: фазы 2–3 вне замера); отметить в H-12 |
+| Д-11 | H-01 | имя потока `discover_0` вместо `discover-1` | косметика, H-11 |
+
 ## E. Закрытие
 
 ### H-12 · Обновление документации и MemoryBank
@@ -412,7 +442,7 @@ frozen VO; `GitAdapter.submodules()` — не вызывается никем; `
 | Волна | Таски | Агентов | Зависимости |
 |---|---|---|---|
 | 1 | H-01 · H-02 · H-03 · H-04 | 4 | нет — можно параллельно |
-| 2 | H-05 · H-06 | 2 | нужен H-04 (база замера и `bench_scan.py`); H-06 трогает `markdown_worker.py`/чекеры — **не пересекаться** с H-05 (H-05: `parsing/markdown_it_heading_source.py`, `checking/anchor_checker.py`, `discovery/*`; H-06: `runtime/markdown_worker.py`, `checking/http_checker.py`, `checking/local_file_checker.py` только строки логирования) |
+| 2 | H-05 · H-06 · H-13 | 3 | нужен H-04 (база замера и `bench_scan.py`); H-13 — только `source/github_org_source.py`, `source_factory.py`, `test_source.py`; H-06 трогает `markdown_worker.py`/чекеры — **не пересекаться** с H-05 (H-05: `parsing/markdown_it_heading_source.py`, `checking/anchor_checker.py`, `discovery/*`; H-06: `runtime/markdown_worker.py`, `checking/http_checker.py`, `checking/local_file_checker.py` только строки логирования) |
 | 3 | H-07 · H-08 · H-09 | 3 | H-07 нужен после H-05, H-06; H-08 пишет `tests/hw01/test_resilience.py`, H-09 — только документ + `out/hw01/load/` |
 | 4 | H-10 · H-11 | 2 | нет, но лучше после правок |
 | 5 | H-12 | 1 | всё выше; получает от оркестранта путь к финальному `tokens_*.md` |

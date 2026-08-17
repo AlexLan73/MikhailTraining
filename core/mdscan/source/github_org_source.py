@@ -9,14 +9,15 @@ from __future__ import annotations
 import json
 import logging
 import os
-from collections.abc import Callable, Iterable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from ..config.scan_config import SourceConfig
-from ..errors import GitHubDiscoveryError
+from ..errors import GitHubDiscoveryError, GitUnavailableError
 from ..models.repo_info import RepoInfo
 from .git_adapter import GitAdapter
 from .remote_repo_source import RemoteRepoSource
@@ -31,6 +32,8 @@ HttpGet = Callable[[str, Mapping[str, str]], tuple[int, str, Mapping[str, str]]]
 _API_ROOT = "https://api.github.com"
 _USER_AGENT = "mdscan"
 _GH_FIELDS = "name,url,sshUrl,isFork,isArchived,visibility"
+#: Префикс имён потоков клонирования — он же идёт в лог (D2.1).
+CLONE_PREFIX = "clone"
 _MAX_PAGES = 1000  # страховка от бесконечного листания при некорректном заголовке Link
 _ADVICE = "перечисли репозитории в source.repositories и запусти с целью `yaml`"
 
@@ -151,7 +154,13 @@ def _discover_api(org: str, page_size: int, http_get: HttpGet) -> list[dict[str,
 
 
 class GitHubOrgSource:
-    """Раскрывает организацию в репозитории и отдаёт их клонами (`RemoteRepoSource`)."""
+    """Раскрывает организацию в репозитории и отдаёт их клонами (`RemoteRepoSource`).
+
+    Организация — **один** источник, поэтому пул обхода (`workers.discover`) её не
+    параллелит: он раскладывает по потокам источники, а не репозитории внутри одного.
+    Клонирование ведётся собственным пулом на `clone_workers` потоков (H-13, дефект D-2
+    прогона H-01: 10 репозиториев клонировались последовательно — 72.5 с из 103 с).
+    """
 
     def __init__(
         self,
@@ -160,33 +169,71 @@ class GitHubOrgSource:
         run_gh: RunGh,
         http_get: HttpGet,
         git: GitAdapter,
+        clone_workers: int = 1,
     ) -> None:
         self._org = _org_name(org_url)
         self._config = config
         self._run_gh = run_gh
         self._http_get = http_get
         self._git = git
+        self._clone_workers = max(1, clone_workers)
         self._children: list[RemoteRepoSource] = []
 
     def repositories(self) -> Iterable[RepoInfo]:
-        """Репозитории организации после фильтров, каждый — склонированный локально."""
+        """Репозитории организации после фильтров, каждый — склонированный локально.
+
+        Возвращается **ленивая** последовательность: репозиторий отдаётся сразу, как
+        только склонирован (`as_completed`), — стадия 2 начинает разбирать первый
+        репозиторий, пока остальные ещё клонируются. Порядок поэтому не совпадает
+        с порядком выдачи GitHub (при `clone_workers=1` — совпадает).
+        """
         records = [record for record in self._discover() if self._accepted(record)]
-        logger.info("организация %s: репозиториев к обходу %d", self._org, len(records))
-        infos: list[RepoInfo] = []
-        for record in records:
-            child = RemoteRepoSource(
-                self._clone_url(record),
-                Path(self._config.clone_dir),
-                self._config.clone_depth,
-                self._config.keep_clones,
-                self._git,
-            )
-            self._children.append(child)
-            infos.extend(
+        logger.info(
+            "организация %s: репозиториев к обходу %d, потоков клонирования %d",
+            self._org,
+            len(records),
+            min(self._clone_workers, len(records)) or 1,
+        )
+        children = [(record, self._child(record)) for record in records]
+        self._children.extend(child for _, child in children)
+        return self._cloned(children)
+
+    def _child(self, record: Mapping[str, Any]) -> RemoteRepoSource:
+        """Дочерний источник-клон одного репозитория организации."""
+        return RemoteRepoSource(
+            self._clone_url(record),
+            Path(self._config.clone_dir),
+            self._config.clone_depth,
+            self._config.keep_clones,
+            self._git,
+        )
+
+    def _cloned(
+        self, children: Sequence[tuple[Mapping[str, Any], RemoteRepoSource]]
+    ) -> Iterator[RepoInfo]:
+        """Клонировать в `clone_workers` потоков и отдавать по мере готовности."""
+        if not children:
+            return
+        workers = min(self._clone_workers, len(children))
+        with ThreadPoolExecutor(max_workers=workers, thread_name_prefix=CLONE_PREFIX) as pool:
+            futures = [pool.submit(self._clone_one, record, child) for record, child in children]
+            for future in as_completed(futures):
+                yield from future.result()
+
+    def _clone_one(
+        self, record: Mapping[str, Any], child: RemoteRepoSource
+    ) -> list[RepoInfo]:
+        """Один репозиторий: клон + `RepoInfo`; ошибка клона не роняет остальные (правило 11)."""
+        try:
+            return [
                 replace(info, remote_url=record["ssh_url"], web_url=record["web_url"])
                 for info in child.repositories()
-            )
-        return infos
+            ]
+        except GitUnavailableError:
+            raise  # нет git — продолжать бессмысленно, ошибку видит весь прогон
+        except Exception:  # noqa: BLE001 — репозиторий пропускаем, организация обходится дальше
+            logger.exception("репозиторий %s организации %s пропущен", record["name"], self._org)
+            return []
 
     def cleanup(self) -> None:
         """Убрать клоны всех дочерних источников; падение одного не мешает остальным."""

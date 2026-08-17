@@ -12,6 +12,8 @@
 Ошибка записи отчёта **не** выпускается наружу исключением: она превращается в
 `ScanSummary(exit_code=3)` с записью `CRITICAL` (зафиксированный выбор из двух,
 разрешённых ТЗ) — счётчики прогона при этом сохраняются и доходят до ДЗ (T-14).
+Так же обходится и прерывание пользователем: `Ctrl+C` даёт `ScanSummary(exit_code=130)`
+с `CRITICAL` в логе, но без файла отчёта (H-08, сценарий 1) — трейсбека человек не видит.
 
 Класс же реализует `ProgressSource` (T-11): срез счётчиков берётся у конвейера,
 поэтому поток прогресса не знает ни про очереди, ни про статистику.
@@ -49,6 +51,9 @@ logger = logging.getLogger("core.mdscan.runtime.orchestrator")
 
 #: Код внутренней ошибки (часть 2 §1.4): git недоступен, отчёт не записан, сбой прогона.
 INTERNAL_ERROR_CODE = 3
+
+#: Код прерывания пользователем (`Ctrl+C`), соглашение POSIX 128+SIGINT (H-08, сценарий 1).
+INTERRUPTED_CODE = 130
 
 #: Пустой срез: прогресс может спросить счётчики до старта конвейера.
 _NO_PROGRESS = ProgressSnapshot(
@@ -88,13 +93,38 @@ class ScanOrchestrator:
             sources = SourceFactory(GitAdapter()).for_config(config)
             pipeline.run(sources)
             summary = pipeline.stats.summary(time.perf_counter() - clock, config.run.fail_on_broken)
+            if pipeline.interrupted:
+                return self._interrupted(summary)
             return self._publish(config, started_at, report_file, pipeline.results, summary)
+        except KeyboardInterrupt:  # прерывание вне конвейера (фаза 0/2) — тоже без трейсбека
+            logger.critical("прогон прерван пользователем (Ctrl+C)")
+            return ScanSummary(counters={}, duration_sec=time.perf_counter() - clock,
+                               exit_code=INTERRUPTED_CODE)
         except Exception as exc:  # noqa: BLE001 — прогон не бросает наружу, а возвращает код 3
             logger.critical("прогон прерван: %s: %s", type(exc).__name__, exc, exc_info=True)
             return ScanSummary(counters={}, duration_sec=time.perf_counter() - clock,
                                exit_code=INTERNAL_ERROR_CODE)
         finally:
             self._shutdown(reporter, sources, setup)
+
+    @staticmethod
+    def _interrupted(summary: ScanSummary) -> ScanSummary:
+        """Прогон прерван (`Ctrl+C`): отчёт не пишем, счётчики и код 130 отдаём наружу.
+
+        Отчёт по неполным данным ввёл бы в заблуждение (числа меньше реальных, а по
+        файлу этого не видно), поэтому фаза 2 пропускается — человеку остаётся явное
+        сообщение и те же счётчики в логе.
+        """
+        counters = summary.counters
+        logger.critical(
+            "прогон прерван пользователем (Ctrl+C): отчёт не записан; найдено файлов %.0f, "
+            "разобрано %.0f, ссылок %.0f",
+            counters.get("md_files_total", 0.0),
+            counters.get("files_ok", 0.0) + counters.get("files_failed", 0.0),
+            counters.get("links_total", 0.0),
+        )
+        return ScanSummary(counters=counters, duration_sec=summary.duration_sec,
+                           exit_code=INTERRUPTED_CODE)
 
     def _publish(self, config: ScanConfig, started_at: datetime, report_file: Path,
                  results: Sequence[MdFileResult], summary: ScanSummary) -> ScanSummary:

@@ -51,10 +51,16 @@ class AnchorChecker:
             return
         link.status = CheckStatus.BROKEN
         link.detail = f"нет заголовка с якорем «{fragment}» в {md_file.name}"
-        _log.warning("битый якорь: #%s в %s", fragment, md_file)
+        _log.debug("битый якорь: #%s в %s", fragment, md_file)  # H-06: одна WARNING на ссылку — у воркера
 
     def _slugs_of(self, md_file: Path) -> tuple[str, ...]:
-        """Slug'и заголовков файла; повторный вызов берёт их из кэша."""
+        """Slug'и заголовков файла; повторный вызов берёт их из кэша.
+
+        Ключ кэша — путь как он пришёл: сам его не резолвим (это обращение к ОС на каждую
+        якорную ссылку). Абсолютный резолвленный путь обеспечивает вызывающий — обход
+        (`MarkdownFileFinder`) для своего файла и `LocalFileChecker` для целевого; проверено
+        замером H-05: 257 файлов с якорями → 257 разборов заголовков на прогон.
+        """
         with self._lock:
             cached = self._cache.get(md_file)
         if cached is not None:

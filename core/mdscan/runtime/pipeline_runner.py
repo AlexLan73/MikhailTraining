@@ -62,6 +62,7 @@ class PipelineRunner:
 
     def __init__(self, config: ScanConfig, notifier: Notifier, checkers: CheckerFactory) -> None:
         self._config = config
+        self._interrupted = False
         self._tasks: TaskQueue = queue.Queue()
         self._results: ResultQueue = queue.Queue()
         self._stats = StatisticsCollector()
@@ -94,6 +95,11 @@ class PipelineRunner:
         return self._stats
 
     @property
+    def interrupted(self) -> bool:
+        """Прогон прерван пользователем (`Ctrl+C`): результаты неполные, отчёт не пишется."""
+        return self._interrupted
+
+    @property
     def results(self) -> list[MdFileResult]:
         """Собранные результаты; заполнены полностью только после `run()`."""
         return self._collector.results
@@ -114,11 +120,43 @@ class PipelineRunner:
 
         Гашение — в `finally`: даже если обход упал (нет git, сорвалось раскрытие
         организации), потоки обязаны выйти по сентинелам, иначе прогон повиснет.
+
+        `KeyboardInterrupt` обхода наружу не выпускается: он лишь помечает прогон
+        прерванным (`interrupted`), а конвейер всё равно гасится по сентинелам —
+        иначе parse-worker'ы (не демоны) остались бы дорабатывать очередь (H-08).
         """
         try:
             self._discover(sources)
+        except KeyboardInterrupt:
+            self._interrupted = True
+            logger.warning("прерывание пользователем на обходе: остаток задач будет отброшен")
         finally:
             self._drain()
+
+    def cancel(self) -> int:
+        """Отбросить необработанные задачи (прерывание); вернуть число отброшенных.
+
+        Сентинелы не съедаются: каждый parse-worker обязан получить свой
+        `END_DISCOVERY` (инвариант 19), иначе поток навсегда останется на `get()`.
+        Баланс `task_done()` сохраняется — на каждый снятый элемент вызывается свой
+        `task_done()`, поэтому `TaskQueue.join()` после отбрасывания возвращается
+        (инвариант 5). Сентинелы лежат в очереди строго после задач, поэтому первый
+        встреченный сентинел означает, что задач больше нет.
+        """
+        self._interrupted = True
+        dropped = 0
+        while True:
+            try:
+                item = self._tasks.get_nowait()
+            except queue.Empty:
+                break
+            self._tasks.task_done()
+            if item is END_DISCOVERY:
+                self._tasks.put(END_DISCOVERY)  # сентинел чужой — возвращаем в очередь
+                break
+            dropped += 1
+        logger.warning("прерывание: отброшено необработанных задач %d", dropped)
+        return dropped
 
     def _discover(self, sources: Sequence[RepositorySource]) -> None:
         """Стадия 1: пул обхода; `future.result()` у каждого — иначе ошибка исчезнет молча."""
@@ -167,13 +205,30 @@ class PipelineRunner:
         """Порядок завершения D1 — переставлять шаги нельзя (инварианты 3–5)."""
         for _ in self._workers:
             self._tasks.put(END_DISCOVERY)
-        self._tasks.join()
+        self._await_tasks()
         for worker in self._workers:
             self._join(worker)
         self._results.put(END_RESULTS)
         self._results.join()
         self._join(self._collector)
         logger.info("конвейер остановлен: результатов %d", len(self.results))
+
+    def _await_tasks(self) -> None:
+        """Дождаться разбора очереди; `Ctrl+C` здесь — отбросить остаток и выйти.
+
+        Прерывание чаще всего застаёт главный поток именно на этом ожидании. Без
+        отбрасывания остатка `Ctrl+C` не прерывает прогон: главный поток уходит, а
+        воркеры дорабатывают всю очередь — процесс живёт ещё минуты (H-08, сценарий 1).
+        Второй `Ctrl+C` (уже во время гашения) выпускается наружу — оркестратор
+        превратит его в код 130 без отчёта.
+        """
+        if self._interrupted:
+            self.cancel()
+        try:
+            self._tasks.join()
+        except KeyboardInterrupt:
+            self.cancel()
+            self._tasks.join()
 
     @staticmethod
     def _join(thread: threading.Thread) -> None:

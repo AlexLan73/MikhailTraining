@@ -13,7 +13,7 @@ import urllib.request
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 
-from ..config.scan_config import ScanConfig, SourceConfig
+from ..config.scan_config import ScanConfig
 from ..enums.source_kind import SourceKind
 from .git_adapter import GitAdapter
 from .github_org_source import GitHubOrgSource, HttpGet, RunGh
@@ -60,7 +60,7 @@ class SourceFactory:
 
     def for_config(self, config: ScanConfig) -> list[RepositorySource]:
         """По источнику на каждую цель `source.targets_resolved` (список смешанный)."""
-        builders: dict[SourceKind, Callable[[str, SourceConfig], RepositorySource]] = {
+        builders: dict[SourceKind, Callable[[str, ScanConfig], RepositorySource]] = {
             SourceKind.LOCAL: self._local,
             SourceKind.REMOTE_REPO: self._remote,
             SourceKind.GITHUB_ORG: self._org,
@@ -72,15 +72,16 @@ class SourceFactory:
                 logger.error("неизвестный вид цели %r (%s) — цель пропущена", kind, address)
                 continue
             logger.info("источник %s для цели %s", kind.value, address)
-            sources.append(builder(address, config.source))
+            sources.append(builder(address, config))
         return sources
 
-    def _local(self, address: str, source: SourceConfig) -> RepositorySource:
+    def _local(self, address: str, config: ScanConfig) -> RepositorySource:
         """Локальный каталог."""
         return LocalPathSource(Path(address), self._git)
 
-    def _remote(self, address: str, source: SourceConfig) -> RepositorySource:
+    def _remote(self, address: str, config: ScanConfig) -> RepositorySource:
         """Один удалённый репозиторий (клонируется в `source.clone_dir`)."""
+        source = config.source
         return RemoteRepoSource(
             address,
             Path(source.clone_dir),
@@ -89,6 +90,17 @@ class SourceFactory:
             self._git,
         )
 
-    def _org(self, address: str, source: SourceConfig) -> RepositorySource:
-        """Организация GitHub целиком."""
-        return GitHubOrgSource(address, source, self._run_gh, self._http_get, self._git)
+    def _org(self, address: str, config: ScanConfig) -> RepositorySource:
+        """Организация GitHub целиком; репозитории клонируются в `workers.discover` потоков.
+
+        Пул обхода параллелит источники, а организация — один источник; чтобы
+        `workers.discover` работал и внутри неё, то же число отдаётся источнику (H-13).
+        """
+        return GitHubOrgSource(
+            address,
+            config.source,
+            self._run_gh,
+            self._http_get,
+            self._git,
+            config.workers.discover,
+        )

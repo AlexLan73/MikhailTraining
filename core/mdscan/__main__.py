@@ -5,7 +5,8 @@
 `-h`/`--help`/`-?`/пусто = печать конфигурации.
 
 Коды возврата (часть 2 §1.4): `0` успех · `1` найдены битые ссылки ·
-`2` ошибка аргументов или конфигурации · `3` внутренняя ошибка.
+`2` ошибка аргументов или конфигурации · `3` внутренняя ошибка ·
+`130` прервано пользователем (`Ctrl+C`, соглашение POSIX 128+SIGINT; H-08).
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ from .cli.validation.validation_context import ValidationContext
 from .config.config_printer import ConfigPrinter
 from .config.scan_config import ScanConfig
 from .config.yaml_config_loader import YamlConfigLoader
-from .runtime.scan_orchestrator import INTERNAL_ERROR_CODE, ScanOrchestrator
+from .runtime.scan_orchestrator import INTERNAL_ERROR_CODE, INTERRUPTED_CODE, ScanOrchestrator
 
 logger = logging.getLogger("core.mdscan")
 
@@ -50,6 +51,10 @@ def main(argv: Sequence[str]) -> int:
             sys.stdout.write(f"{ConfigPrinter().render(config, draft.sources)}\n")
             return 0
         return ScanOrchestrator().scan(config).exit_code
+    except KeyboardInterrupt:  # Ctrl+C в фазе 0: человеку строка, системе код 130
+        logger.warning("прогон прерван пользователем (Ctrl+C)")
+        sys.stderr.write("прервано пользователем (Ctrl+C)\n")
+        return INTERRUPTED_CODE
     except Exception as exc:  # noqa: BLE001 — последний рубеж: человеку строка, системе код 3
         logger.critical("внутренняя ошибка: %s: %s", type(exc).__name__, exc, exc_info=True)
         sys.stderr.write(f"внутренняя ошибка: {type(exc).__name__}: {exc}\n")

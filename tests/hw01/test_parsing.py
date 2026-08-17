@@ -388,6 +388,44 @@ def test_headings_empty_for_text_without_headings() -> None:
     assert MarkdownItHeadingSource().headings("просто текст\n") == ()
 
 
+@pytest.mark.parametrize(
+    ("heading", "expected"),
+    [
+        ("## Как **запустить**", "Как запустить"),
+        ("## Как _запустить_", "Как запустить"),
+        ("## Как `запустить`", "Как запустить"),
+        ("## Как [запустить](run.md)", "Как запустить"),
+        ("## Как ![схема](run.png) запустить", "Как схема запустить"),
+        ("## Как ~~не~~ запустить", "Как не запустить"),
+        ("## Как <b>запустить</b>", "Как запустить"),
+        (r"## Как \*запустить\*", "Как *запустить*"),
+    ],
+    ids=["strong", "em", "code", "link", "image", "strike", "html", "escape"],
+)
+def test_heading_text_drops_inline_markup(heading: str, expected: str) -> None:
+    """H-05 (G-H): разметка в заголовке в текст не попадает — значит и в slug.
+
+    GitHub считает `## Как **запустить**` якорем `#как-запустить`: звёздочки в slug не идут.
+    Документ разбирается блочно (inline-правила выключены), поэтому разметку из сырого
+    `token.content` снимает отдельный inline-проход по тексту заголовка.
+    """
+    assert MarkdownItHeadingSource().headings(heading + "\n") == (expected,)
+
+
+def test_heading_with_reference_link_uses_link_text() -> None:
+    """`[текст][ref]` в заголовке даёт `текст`: определения ссылок видны inline-проходу (общий `env`)."""
+    text = "## Смотри [руководство][ref]\n\n[ref]: docs/guide.md\n"
+
+    assert MarkdownItHeadingSource().headings(text) == ("Смотри руководство",)
+
+
+def test_headings_inside_list_and_quote_are_found() -> None:
+    """Блочная структура нужна целиком: GitHub даёт якорь и заголовку в списке, и в цитате."""
+    text = "- ## В списке\n\n> ### В цитате\n\n    # в отступном коде\n"
+
+    assert MarkdownItHeadingSource().headings(text) == ("В списке", "В цитате")
+
+
 def test_headings_on_reference_tree_file(reference_tree: ReferenceTree) -> None:
     """На реальном файле набора A заголовки совпадают с исходником."""
     text = MarkdownReader().read(reference_tree.root / "docs" / "install.md")
@@ -400,3 +438,21 @@ def test_bare_filenames_are_not_linkified() -> None:
     text = "см. Full.md и conftest.py, а также https://example.com/x и http://prng.cl"
     targets = [link.target for link in MarkdownItLinkExtractor().extract(text)]
     assert targets == ["https://example.com/x", "http://prng.cl"]
+
+
+@pytest.mark.parametrize(
+    ("target", "expected"),
+    [
+        pytest.param("data:image/png;base64,iVBORw0KGgo=", LinkKind.UNKNOWN, id="data-uri"),
+        pytest.param("javascript:void(0)", LinkKind.UNKNOWN, id="javascript"),
+        pytest.param("ftp://host/file.txt", LinkKind.UNKNOWN, id="ftp"),
+        pytest.param("std::string", LinkKind.UNKNOWN, id="cpp-scope-not-a-path"),  # H-02 Д-7, H-10
+        pytest.param("af::array", LinkKind.UNKNOWN, id="cpp-scope-2"),
+        pytest.param("C:/tmp/a.md", LinkKind.LOCAL, id="windows-drive-not-a-scheme"),
+        pytest.param("docs/a.md", LinkKind.LOCAL, id="plain-path"),
+        pytest.param("file:///tmp/a.md", LinkKind.LOCAL, id="file-uri-stays-local"),
+    ],
+)
+def test_other_schemes_are_unknown_not_local(classifier: LinkClassifier, target: str, expected: LinkKind) -> None:
+    """H-01/H-02: `data:`-картинка не должна становиться «битым локальным файлом»."""
+    assert classifier.classify(MdLink(target, LinkOrigin.INLINE, 1)) is expected

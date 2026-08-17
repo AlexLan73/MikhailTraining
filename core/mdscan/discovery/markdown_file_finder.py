@@ -8,6 +8,7 @@ from pathlib import Path
 
 from core.mdscan.discovery.git_file_lister import GitFileLister
 from core.mdscan.discovery.nested_repo_finder import GIT_ENTRY, NestedRepoFinder
+from core.mdscan.discovery.resolved_path_cache import ResolvedPathCache
 from core.mdscan.models.repo_info import RepoInfo
 
 logger = logging.getLogger("core.mdscan.discovery")
@@ -29,7 +30,11 @@ class MarkdownFileFinder:
 
     Затем работает правило ближайшего корня: файл, лежащий внутри вложенного
     репозитория, главному не отдаётся. Фильтр — **по префиксу пути**
-    (`Path.is_relative_to` после `resolve()`), не по имени каталога (D6.3).
+    (`Path.is_relative_to` после резолва), не по имени каталога (D6.3).
+
+    Резолв идёт через `ResolvedPathCache` — один вызов ОС на каталог, а не на файл
+    (H-05, гипотеза G-D). Наружу отдаются **абсолютные** пути: на этом инварианте
+    стоит `ProcessedRegistry`, который повторно их не резолвит.
 
     `include_nested` управляет **самостоятельным** поиском вложенных корней: при
     `False` (`scan.include_nested_repos: false`) и пустом `nested_roots` обход сам
@@ -51,6 +56,7 @@ class MarkdownFileFinder:
         self._respect_gitignore = bool(respect_gitignore)
         self._include_nested = bool(include_nested)
         self._nested_finder = NestedRepoFinder()
+        self._paths = ResolvedPathCache()
 
     def find(self, repo: RepoInfo, nested_roots: list[Path]) -> Iterable[Path]:
         """Уникальные абсолютные пути `.md` этого репозитория, отсортированные.
@@ -58,8 +64,8 @@ class MarkdownFileFinder:
         Порядок детерминирован (сортировка) — два прогона дают один и тот же отчёт
         (инвариант 9).
         """
-        root = Path(repo.root).resolve()
-        scope = Path(repo.scope).resolve() if repo.scope is not None else None
+        root = self._paths.directory(Path(repo.root))
+        scope = self._paths.directory(Path(repo.scope)) if repo.scope is not None else None
         excluded = self._excluded_roots(scope or root, nested_roots)  # 🔧 р5: обход стадии 1 — только в scope
         files: list[Path] = []
         seen: set[Path] = set()
@@ -106,7 +112,7 @@ class MarkdownFileFinder:
         files: list[Path] = []
         for raw in listed:
             path = Path(raw)
-            absolute = (path if path.is_absolute() else root / path).resolve()
+            absolute = self._paths.file(path if path.is_absolute() else root / path)
             if self._has_extension(absolute):
                 files.append(absolute)
         return files
@@ -119,7 +125,7 @@ class MarkdownFileFinder:
                 for path in root.rglob(f"*{ext}"):
                     if GIT_ENTRY in path.parts or not path.is_file():
                         continue
-                    files.append(path.resolve())
+                    files.append(self._paths.file(path))
             except OSError as exc:
                 logger.warning(
                     "обход дерева прерван: %s (%s: %s)", root, type(exc).__name__, exc
@@ -128,7 +134,7 @@ class MarkdownFileFinder:
 
     def _excluded_roots(self, root: Path, nested_roots: Sequence[Path] | None) -> tuple[Path, ...]:
         """Корни, чьи файлы главному не принадлежат (сам `root` из набора исключается)."""
-        alien = {Path(nested).resolve() for nested in (nested_roots or ())}
+        alien = {self._paths.directory(Path(nested)) for nested in (nested_roots or ())}
         if not alien and not self._include_nested:
             alien = set(self._nested_finder.find(root))
         alien.discard(root)

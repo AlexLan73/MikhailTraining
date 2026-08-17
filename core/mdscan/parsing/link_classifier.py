@@ -15,6 +15,7 @@ from core.mdscan.parsing.rules.rule_github import GithubRule
 from core.mdscan.parsing.rules.rule_http import HttpRule
 from core.mdscan.parsing.rules.rule_local_path import LocalPathRule
 from core.mdscan.parsing.rules.rule_mailto import MailtoRule
+from core.mdscan.parsing.rules.rule_other_scheme import OtherSchemeRule
 from core.mdscan.parsing.rules.rule_tel import TelRule
 from core.mdscan.parsing.rules.rule_wikilink import WikilinkRule
 
@@ -50,6 +51,7 @@ class LinkClassifier:
                 GithubRule(),
                 HttpRule(),
                 FileUrlRule(),
+                OtherSchemeRule(),  # р6/H-01: data:, javascript:, ftp: … → UNKNOWN, не «локальный путь»
                 LocalPathRule(),
             ]
         )

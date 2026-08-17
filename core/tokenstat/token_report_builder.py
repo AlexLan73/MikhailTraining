@@ -59,6 +59,15 @@ class TokenReportBuilder:
             lines.append(f"| {name} | {task} | {models} | {self._cells(totals)} |")
         lines += [
             "",
+            "## По таскам",  # H-11: `by_task` был, но в отчёт не попадал; H-12 нужна разбивка по TASK=
+            "",
+            "| таск | requests | in | out | cache_create | cache_read | thinking |",
+            "|---|---:|---:|---:|---:|---:|---:|",
+        ]
+        for task, totals in sorted(aggregator.by_task().items()):
+            lines.append(f"| {task or '-'} | {self._cells(totals)} |")
+        lines += [
+            "",
             "## Свод",
             "",
             "| группа | requests | in | out | cache_create | cache_read | thinking |",

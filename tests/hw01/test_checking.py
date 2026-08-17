@@ -9,6 +9,7 @@
 
 from __future__ import annotations
 
+import logging
 import threading
 import time
 from collections.abc import Iterator
@@ -27,11 +28,15 @@ from core.mdscan.enums.check_status import CheckStatus
 from core.mdscan.enums.link_kind import LinkKind
 from core.mdscan.enums.link_origin import LinkOrigin
 from core.mdscan.models.md_link import MdLink
+from core.mdscan.parsing.markdown_it_heading_source import MarkdownItHeadingSource
 
 from .support.http_server import LocalHttpServer
 
 #: Запас времени на любой join в тестах — тест обязан падать, а не висеть.
 _JOIN_TIMEOUT_SEC = 30.0
+
+#: Логгер, в который пишут все чекеры (H-06: их записи об исходе — только `DEBUG`).
+_CHECKING_LOGGER = "core.mdscan.checking"
 
 
 # --------------------------------------------------------------------------
@@ -101,6 +106,34 @@ def tree(tmp_path: Path) -> Path:
     deep.mkdir(parents=True)
     (deep / "deep.md").write_text("# Глубоко\n", encoding="utf-8")
     return tmp_path
+
+
+@pytest.fixture
+def checking_log() -> Iterator[list[logging.LogRecord]]:
+    """Записи логгера чекеров на уровне `DEBUG`.
+
+    `caplog` здесь бесполезен: логгер `core.mdscan` намеренно не пробрасывает
+    записи корневому (`propagate = False`, T-04), поэтому обработчик вешается
+    прямо на логгер пакета и снимается в `finally`.
+    """
+    records: list[logging.LogRecord] = []
+
+    class _Collector(logging.Handler):
+        """Обработчик-накопитель: ничего не форматирует, только запоминает."""
+
+        def emit(self, record: logging.LogRecord) -> None:
+            records.append(record)
+
+    logger = logging.getLogger(_CHECKING_LOGGER)
+    handler = _Collector(logging.DEBUG)
+    previous_level = logger.level
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(handler)
+    try:
+        yield records
+    finally:
+        logger.removeHandler(handler)
+        logger.setLevel(previous_level)
 
 
 @pytest.fixture
@@ -233,6 +266,31 @@ def test_headings_read_once_per_file(tree: Path) -> None:
     assert len(reads) == 1
 
 
+def test_anchor_slug_ignores_inline_markup_in_heading(tmp_path: Path) -> None:
+    """H-05 (G-H): `## Как **запустить**` ↔ `#как-запустить` — разметка в slug не входит.
+
+    Единственный тест, где чекер собран с **настоящим** `MarkdownItHeadingSource`: именно
+    стык «блочный разбор → текст заголовка → slug» и даёт совпадение с GitHub. Остальные
+    тесты модуля работают на заглушке (§2.5, DIP).
+    """
+    md_file = tmp_path / "readme.md"
+    md_file.write_text("## Как **запустить**\n\n### `Код` и [ссылка](a.md)\n", encoding="utf-8")
+    checker = AnchorChecker(MarkdownItHeadingSource())
+
+    good = _link("#как-запустить", LinkKind.ANCHOR)
+    checker.check(good, md_file)
+    with_code = _link("#код-и-ссылка", LinkKind.ANCHOR)
+    checker.check(with_code, md_file)
+    bad = _link("#как-запустить-жирным", LinkKind.ANCHOR)
+    checker.check(bad, md_file)
+
+    assert (good.status, with_code.status, bad.status) == (
+        CheckStatus.OK,
+        CheckStatus.OK,
+        CheckStatus.BROKEN,
+    )
+
+
 def test_anchors_disabled_leaves_anchor_part_unchecked(tree: Path) -> None:
     """`checks.anchors: false` → ANCHOR получает `NullChecker`, якорь `a.md#x` не проверяется."""
     factory, _ = _factory(checks__anchors=False)
@@ -319,6 +377,46 @@ def test_same_url_requested_once(http_server: LocalHttpServer, tmp_path: Path) -
     assert http_server.hits("/ok") == 1
     assert [link.status for link in links] == [CheckStatus.OK, CheckStatus.OK]
     assert len(notifier.messages) == 2
+
+
+def test_cache_hit_is_marked_in_log(
+    http_server: LocalHttpServer, tmp_path: Path, checking_log: list[logging.LogRecord]
+) -> None:
+    """H-06: попадание в кэш отличимо от сетевого вызова — префикс `http cache`.
+
+    Без этого по логу нельзя доказать, что кэш работает: обе строки выглядели
+    одинаково (находка H-03).
+    """
+    factory, _ = _factory()
+    checker = factory.for_kind(LinkKind.URL)
+    url = http_server.url("/ok")
+    for _ in range(2):
+        checker.check(_link(url, LinkKind.URL), tmp_path / "doc.md")
+
+    messages = [record.getMessage() for record in checking_log]
+    assert http_server.hits("/ok") == 1
+    assert len([text for text in messages if text.startswith("http cache 200 ")]) == 1
+    assert len([text for text in messages if text.startswith("http 200 ")]) == 1
+
+
+def test_checkers_report_broken_links_at_debug_only(
+    tree: Path, http_server: LocalHttpServer, tmp_path: Path, checking_log: list[logging.LogRecord]
+) -> None:
+    """H-06: чекеры про исход пишут только `DEBUG`.
+
+    Громкую строку на битую ссылку пишет `MarkdownWorker._log_link` — один раз и
+    с полями `repo`/`file`; раньше их было две (1269 записей на 634 битых ссылки).
+    """
+    factory, _ = _factory()
+    factory.for_kind(LinkKind.LOCAL).check(_link("нет-такого.md"), tree / "docs" / "a.md")
+    factory.for_kind(LinkKind.URL).check(
+        _link(http_server.url("/missing"), LinkKind.URL), tmp_path / "doc.md"
+    )
+
+    assert [record.getMessage() for record in checking_log if record.levelno >= logging.WARNING] == []
+    messages = [record.getMessage() for record in checking_log]
+    assert any(text.startswith("битая локальная ссылка:") for text in messages)
+    assert any(text.startswith("http broken ") for text in messages)
 
 
 def test_cache_disabled_repeats_request(http_server: LocalHttpServer, tmp_path: Path) -> None:

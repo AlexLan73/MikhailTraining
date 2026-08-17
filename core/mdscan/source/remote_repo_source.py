@@ -68,6 +68,9 @@ class RemoteRepoSource:
         except GitUnavailableError:
             raise
         except MdScanError as exc:
+            # 🔧 H-13: клон мог оборваться на середине — каталог запоминаем, иначе
+            # `cleanup()` оставит мусор в `source.clone_dir` (частичный клон).
+            self._clone_path = target if target.exists() else None
             logger.error("репозиторий пропущен: %s", exc, exc_info=True)
             return []
         self._clone_path = path

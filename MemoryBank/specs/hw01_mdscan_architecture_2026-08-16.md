@@ -152,7 +152,8 @@ python -m core.mdscan yaml -workers.parse:8    # из конфига + разо�
 | `0` | успех, битых ссылок нет (или `fail_on_broken: false`) |
 | `1` | успех, найдены битые ссылки / файлы с ошибками |
 | `2` | ошибка аргументов или конфигурации |
-| `3` | внутренняя ошибка (git недоступен, не удалось записать отчёт) |
+| `3` | внутренняя ошибка (git недоступен, не удалось записать отчёт, лимит GitHub API `429`) |
+| `130` | 🔧 **этап 2 (H-08)**: прогон прерван пользователем (`Ctrl+C`) — POSIX `128 + SIGINT`; отчёт не пишется, в логе `CRITICAL` со счётчиками разобранного |
 
 ---
 
@@ -200,6 +201,9 @@ source:                            # ЧТО сканируем и откуда �
   auth: auto                       # протокол доступа: auto | ssh | https | token.
                                    #   свои приватные → ssh; чужие ПУБЛИЧНЫЕ → https (ключи не нужны);
                                    #   CI без ключа → token (GITHUB_TOKEN из окружения).
+                                   # 🔧 этап 2 (Р-09): поле читается ТОЛЬКО при раскрытии организации.
+                                   #   Одиночный репозиторий клонируется по адресу как он дан —
+                                   #   -source.auth:ssh на https://…/repo.git молча ничего не меняет.
   visibility: all                  # какие репозитории брать: all | public | private
   include_forks: false             # true — тащить и форки (обычно это шум в отчёте)
   include_archived: false          # true — тащить архивные репозитории
@@ -258,6 +262,9 @@ progress:                          # ВЫВОД ХОДА РАБОТЫ на эк�
   enabled: true                    # false — ничего не показываем (например, в CI)
   interval_sec: 1.0                # зона 1: как часто перерисовывается строка состояния
   style: line                      # line — одна строка | panel — рамка | off
+                                   # 🔧 этап 2 (Р-08): различается ТОЛЬКО off; line и panel дают одно
+                                   #   и то же — вид выбирается по наличию rich. Решение Alex: убрать
+                                   #   panel из конфига либо реализовать отдельным ProgressView.
   message_lines: 1                 # зона 2: сколько строк-сообщений от модулей держим на экране
   message_ttl_sec: 5.0             # через сколько секунд строка-сообщение гаснет сама (🔧 р5: float)
 
@@ -1224,12 +1231,15 @@ core/mdscan/
 ├── discovery/
 │   ├── git_file_lister.py           # 🔧 ревью 5: GitFileLister (Protocol) — владеет discovery, реализует GitAdapter структурно (DIP)
 │   ├── nested_repo_finder.py · markdown_file_finder.py · processed_registry.py
+│   └── resolved_path_cache.py       # 🔧 этап 2 (H-05): один resolve() на файл (обход 0.121 → 0.060 с)
 ├── parsing/
 │   ├── markdown_reader.py · link_extractor.py · markdown_it_link_extractor.py
 │   ├── markdown_it_heading_source.py   # 🔧 ревью 4: реализация checking.HeadingSource (заголовки для якорей)
 │   ├── link_classifier.py
 │   └── rules/ link_rule.py · rule_wikilink.py · rule_footnote.py · rule_anchor.py · rule_mailto.py
-│              rule_tel.py · rule_github.py · rule_http.py · rule_file_url.py · rule_local_path.py   # 9 правил
+│              rule_tel.py · rule_github.py · rule_http.py · rule_file_url.py
+│              rule_other_scheme.py · rule_local_path.py   # 🔧 этап 2: 10 правил (было 9);
+│              # OtherSchemeRule (data:, javascript:, ftp:, std::… → UNKNOWN) стоит ПЕРЕД LocalPathRule
 ├── checking/
 │   ├── link_checker.py · heading_source.py   # 🔧 ревью 4: HeadingSource (Protocol) — владеет checking, реализует parsing (DIP)
 │   ├── local_file_checker.py · anchor_checker.py
@@ -1238,6 +1248,8 @@ core/mdscan/
 │   ├── queues.py · sentinels.py     # END_DISCOVERY, END_RESULTS
 │   ├── markdown_worker.py · base_observer.py · collecting_observer.py
 │   ├── statistics_collector.py · scan_orchestrator.py
+│   ├── pipeline_runner.py           # 🔧 этап 2: штатный компонент фазы 1 (был описан только в §10 как
+│                                    #   митигация риска); он же гасит конвейер при Ctrl+C (cancel/_await_tasks)
 │   ├── notifier.py · null_notifier.py            # Notifier (Protocol) — зона 2; Null Object при выключенном прогрессе
 │   ├── progress_source.py           # 🔧 ревью 4: ProgressSource (Protocol) — snapshot(); реализует оркестратор
 │   ├── progress_reporter.py         # Thread: зона 1 по таймеру + реализует Notifier (зона 2, TTL 5 с)
@@ -1263,6 +1275,10 @@ homework/hw01_mdlinks/
 
 tests/hw01/
 ├── support/http_server.py           # локальный HTTP-сервер для T-07 (генератор деревьев — в homework/hw01_mdlinks/support/, 🔧 р5)
+├── support/bench_scan.py · bench_layers.py · bench_load.py · bench_http.py · bench_http_server.py
+│                                    # 🔧 этап 2: инструменты замера (не тесты — pytest берёт только test_*.py)
+├── test_http_live.py                # 🔧 этап 2: живые HTTP-проверки, @pytest.mark.network + MDSCAN_NETWORK=1
+├── test_resilience.py               # 🔧 этап 2 (H-08): аварийные сценарии, включая Ctrl+C и код 130
 ├── conftest.py                      # T-02: фикстура reference_tree, --rebuild-fixtures
 └── test_*.py                        # pytest, по файлу на модуль (макеты M1–M5 — первые тесты T-06/08/09/10/11)
 
@@ -1332,6 +1348,17 @@ out/hw01/                            # локально, вне git
 25. 🔧 ревью 3: отчёт и консоль строятся главным потоком **после** `reporter.join()` из
     `collector.results` + `statistics.summary()`; поток collector сам ничего не пишет.
 
+> 🔧 **этап 2, примечание к инвариантам.** Ревью H-10 сверило все 25 инвариантов с кодом: 23 закрыты
+> тестом полностью, №1 и №3 — частично (нет теста именно на верхнюю границу одновременности обхода и
+> на «ровно один раз» при нуле репозиториев); «нет теста» — ни у одного. Гашение по `Ctrl+C`
+> инварианты 5 и 19 **сохраняет осознанно**: `cancel()` возвращает встреченный `END_DISCOVERY`
+> в очередь (иначе parse-воркер навсегда остаётся на `get()`) и вызывает `task_done()` на каждый
+> снятый элемент (иначе `TaskQueue.join()` не вернётся) — это закреплено тестами
+> `test_resilience.py::test_cancel_drops_pending_tasks_and_keeps_sentinels`.
+> Полный список расхождений «спека ↔ код» (Р-01…Р-15) — в
+> [`hw01_h10_review_spec_2026-08-17.md`](hw01_h10_review_spec_2026-08-17.md); ревью кода
+> (1 🔴 / 10 🟠 / 34 🟡) — в [`hw01_h11_review_code_2026-08-17.md`](hw01_h11_review_code_2026-08-17.md).
+
 ---
 
 ## 7. План шагов с тест-гейтами
@@ -1372,7 +1399,7 @@ out/hw01/                            # локально, вне git
 | `enums` (4) + `models` (5: `MdLink`, `MdFileResult`, `RepoInfo`, `MdTask`, `ScanSummary`; `LinkStatus` убран) | 120 |
 | `source` (3 источника + `SourceFactory` + `GitAdapter` на GitPython) | 190 |
 | `discovery` (nested, поиск `.md` с `ls-files`, реестр) | 120 |
-| `parsing` (extractor на `markdown-it-py` + классификатор + 9 правил; `CodeBlockMasker` не нужен) | 160 |
+| `parsing` (extractor на `markdown-it-py` + классификатор + **10** правил 🔧 этап 2; `CodeBlockMasker` не нужен) | 160 |
 | `checking` (local, anchor, http, null, фабрика) | 130 |
 | `runtime` (очереди, сентинелы, `BaseObserver` → worker + collector, статистика, `Scanner` + оркестратор) | 240 |
 | `runtime` — прогресс: `ProgressReporter` + `Notifier`/`NullNotifier` + `ProgressView` (rich/plain) | 120 |
@@ -1390,6 +1417,15 @@ out/hw01/                            # локально, вне git
 `Scanner`, `NullNotifier`) — ≈ 1910; 🔧 ревью 4: +30 (`ConfigDraft`, `ProgressSnapshot`, `HeadingSource`,
 `ProgressSource` — контракты, снимающие зависимости между параллельными тасками) — **≈ 1940**, +4 % от
 утверждённого 1870; отдельного согласования не прошу, но отмечаю.
+
+> 🔧 **этап 2 (Р-11): бюджет не выполнен и требует пересогласования.** Факт по всем строкам,
+> включая докстринги: `core/mdscan` **6371**, `core/tokenstat` **613**, `homework/hw01_mdlinks` **881**
+> = **7865** строк продуктивного кода против цели ≈1940 (тесты — 6828 строк, в бюджет не входят).
+> По пакетам против цели: `runtime` 1270/360 · `config` 1055/200 · `cli` 727/180 · `source` 726/190 ·
+> `parsing` 692/160 · `reporting` 542/160 · `checking` 480/130 · `discovery` 344/120.
+> Причина не в разбухании классов, а в принятом стиле: докстринги-обоснования по правилам 05/09
+> занимают около половины строк, а `cli/` — это 10 маленьких Strategy-классов правил V1…V10.
+> **Решение Alex**: либо считать бюджет только по исполняемым строкам, либо признать §8 справочным.
 
 ---
 

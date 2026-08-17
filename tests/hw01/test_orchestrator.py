@@ -14,6 +14,7 @@ D5/D6.2). Эталонное дерево лежит в `out/hw01/fixture_tree`,
 
 from __future__ import annotations
 
+import re
 import shutil
 import threading
 from collections.abc import Sequence
@@ -39,6 +40,13 @@ VOLATILE_MARKERS = ("старт", "длительность", "duration_sec", "t
 
 #: Счётчики, которые меряют время прогона, а не его содержимое.
 VOLATILE_COUNTERS = ("duration_sec", "throughput_files_per_sec")
+
+#: Начало строки-записи лога: `время | уровень | поток | repo | file | сообщение` (T-04).
+#: Продолжения трейсбека этому шаблону не отвечают и в подсчёт уровней не идут.
+RECORD_RE = re.compile(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} \| (?P<level>\w+) \| ")
+
+#: Сообщение об исходе одной ссылки, которое пишет `MarkdownWorker._log_link`.
+LINK_RE = re.compile(r"\| link (?P<status>\w+) kind=")
 
 
 @pytest.fixture(scope="session")
@@ -87,6 +95,22 @@ def stable_lines(text: str) -> list[str]:
 def stable_counters(summary: ScanSummary) -> dict[str, float]:
     """Счётчики без временных: сравниваются два прогона, а не две загрузки машины."""
     return {name: value for name, value in summary.counters.items() if name not in VOLATILE_COUNTERS}
+
+
+def log_lines(tmp_path: Path) -> list[str]:
+    """Строки единственного лога прогона; шапка (`# ключ: значение`) в счёт не идёт."""
+    logs = sorted((tmp_path / "logs").glob("*.log"))
+    assert len(logs) == 1, f"ожидался один лог, найдено: {logs}"
+    return [
+        line
+        for line in logs[0].read_text(encoding="utf-8").splitlines()
+        if line and not line.startswith("#")
+    ]
+
+
+def levels_of(lines: Sequence[str]) -> list[str]:
+    """Уровни записей: строки-продолжения трейсбека пропускаются."""
+    return [match.group("level") for match in map(RECORD_RE.match, lines) if match is not None]
 
 
 def our_threads() -> list[str]:
@@ -227,6 +251,58 @@ def test_report_built_after_collector_join(
     assert order == ["collector.join", "report.build"]
 
 
+# ── H-06. уровни лога: DEBUG/INFO и один WARNING на битую ссылку ─────────────
+
+
+def test_info_level_writes_no_debug_records(scan_tree: Path, tmp_path: Path) -> None:
+    """`logging.level: INFO` — в файле ни одной записи `DEBUG`, битые ссылки видны."""
+    summary = run_scan(scan_tree, tmp_path, {"logging.level": "INFO"})
+    lines = log_lines(tmp_path)
+
+    assert "DEBUG" not in levels_of(lines)
+    loud = [line for line in lines if LINK_RE.search(line)]
+    assert len(loud) == int(summary.counters["broken_total"]) > 0
+    assert all("link broken" in line for line in loud)
+
+
+def test_debug_level_writes_a_record_for_every_link(scan_tree: Path, tmp_path: Path) -> None:
+    """`logging.level: DEBUG` — по одной записи на **каждую** ссылку (dev/test-спека §2.3).
+
+    Проверка того, что ленивое форматирование (H-06, гипотеза G4) ничего не съело:
+    число строк `link …` обязано совпасть со счётчиком `links_total` отчёта.
+    """
+    summary = run_scan(scan_tree, tmp_path, {"logging.level": "DEBUG"})
+    lines = log_lines(tmp_path)
+
+    statuses = [match.group("status") for match in map(LINK_RE.search, lines) if match is not None]
+    assert len(statuses) == int(summary.counters["links_total"]) > 0
+    assert statuses.count("ok") > 0
+    assert statuses.count("broken") == int(summary.counters["broken_total"])
+    assert "DEBUG" in levels_of(lines)
+    assert any("parse-start" in line for line in lines)
+
+
+def test_missing_target_gives_exactly_one_warning(scan_tree: Path, tmp_path: Path) -> None:
+    """H-06: «нет файла» — ровно одна громкая строка на ссылку, и она от воркера.
+
+    До правки битую локальную ссылку логировали оба — `LocalFileChecker` (без полей
+    `repo`/`file`) и `MarkdownWorker`; на боевом прогоне это давало 1269 записей
+    `WARNING` на 634 битых ссылки.
+    """
+    run_scan(scan_tree, tmp_path, {"logging.level": "DEBUG"})
+    lines = log_lines(tmp_path)
+
+    about_missing = [line for line in lines if "нет файла:" in line]
+    loud = [line for line in about_missing if levels_of([line]) == ["WARNING"]]
+    assert len(loud) == 4, f"ожидались 4 громкие строки набора A, получено: {loud}"
+    assert all(LINK_RE.search(line) for line in loud)  # громкая — только запись воркера
+    assert len(about_missing) == len(loud)  # чужих громких строк про «нет файла» больше нет
+
+    quiet = [line for line in lines if "битая локальная ссылка:" in line]
+    assert len(quiet) == len(loud)  # своя строка чекера осталась — но тихая
+    assert levels_of(quiet) == ["DEBUG"] * len(quiet)
+
+
 # ── 8. точка входа: цель `yaml` со списком каталогов ─────────────────────────
 
 
@@ -285,3 +361,17 @@ def _write_yaml(directory: Path, roots: Sequence[Path]) -> None:
         "report": {"dir": str(directory / "reports")},
     }
     (directory / "mdscan.yaml").write_text(yaml.safe_dump(payload, allow_unicode=True), encoding="utf-8")
+
+
+# ── H-10 (Р-10): report.console — выключатель консольной сводки ───────────────
+
+
+@pytest.mark.parametrize("console", [True, False], ids=["console-on", "console-off"])
+def test_report_console_switch_controls_stdout(
+    scan_tree: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str], console: bool
+) -> None:
+    """`report.console=false` → в stdout ничего; `true` → сводка есть; отчёт-файл — в обоих случаях."""
+    run_scan(scan_tree, tmp_path, {"report.console": console})
+    out = capsys.readouterr().out
+    assert bool(out.strip()) is console
+    assert report_text(tmp_path)  # файл отчёта не зависит от консоли

@@ -84,8 +84,10 @@ class GitAdapter:
         except GitCommandNotFound as exc:
             raise GitUnavailableError(_NO_GIT) from exc
         except (GitError, OSError) as exc:
-            logger.error("git ls-files не выполнен для %s: %s", root, exc, exc_info=True)
-            return []
+            # H-08 (Д-H08-2): не глотать — пустой список неотличим от «нет .md»; `MarkdownFileFinder`
+            # ловит исключение сам и откатывается на обход дерева (`rglob`), файлы не теряются.
+            logger.warning("git ls-files не выполнен для %s (%s: %s) — обход дерева", root, type(exc).__name__, exc)
+            raise
         base = Path(root).resolve()
         return [
             (base / rel).resolve()

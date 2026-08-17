@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from pathlib import Path
 
 #: Логгер пакета обхода (правило 11): шаги конвейера — `DEBUG`/`INFO`, проблемы — `WARNING`.
@@ -23,7 +24,7 @@ class NestedRepoFinder:
     """
 
     def find(self, root: Path) -> list[Path]:
-        """Список корней вложенных репозиториев (абсолютные, `resolve()`, отсортированы).
+        """Список корней вложенных репозиториев (абсолютные, резолвленные, отсортированы).
 
         Сам `root` в результат не входит, даже если он git-репозиторий. Внутрь
         найденного вложенного репозитория обход не спускается — его собственные
@@ -35,38 +36,44 @@ class NestedRepoFinder:
         found: list[Path] = []
         stack: list[Path] = [base]
         while stack:
-            for child in self._subdirectories(stack.pop()):
-                if self._is_repo_root(child):
-                    logger.debug("вложенный репозиторий: %s", child)
-                    found.append(child)
-                    continue
-                stack.append(child)
+            current = stack.pop()
+            children, has_git = self._listed(current)
+            if has_git and current != base:
+                logger.debug("вложенный репозиторий: %s", current)
+                found.append(current)
+                continue
+            stack.extend(children)
         found.sort()
         return found
 
-    def _subdirectories(self, directory: Path) -> list[Path]:
-        """Подкаталоги (без `.git` и без симлинков); нечитаемый каталог → `WARNING`."""
+    def _listed(self, directory: Path) -> tuple[list[Path], bool]:
+        """Подкаталоги (без `.git` и без симлинков) и признак «здесь есть `.git`».
+
+        Одно обращение к ОС на каталог (H-05): `os.scandir` отдаёт тип записи вместе со
+        списком, поэтому проверка «каталог и не симлинк» лишних вызовов не стоит, а наличие
+        `.git` видно из того же листинга — отдельный `exists()` на каждый подкаталог не нужен.
+        Нечитаемый каталог → `WARNING` и пропуск (правило 11).
+        """
+        children: list[Path] = []
+        has_git = False
         try:
-            entries = sorted(directory.iterdir())
+            with os.scandir(directory) as entries:
+                for entry in entries:
+                    if entry.name == GIT_ENTRY:
+                        has_git = True
+                    elif self._is_plain_dir(entry):
+                        children.append(Path(entry.path))
         except OSError as exc:
             logger.warning(
                 "каталог не прочитан, пропущен: %s (%s: %s)", directory, type(exc).__name__, exc
             )
-            return []
-        return [entry for entry in entries if entry.name != GIT_ENTRY and self._is_plain_dir(entry)]
+        return children, has_git
 
-    def _is_plain_dir(self, path: Path) -> bool:
+    @staticmethod
+    def _is_plain_dir(entry: os.DirEntry[str]) -> bool:
         """`True` — обычный каталог (не симлинк). Ошибка доступа → `False` + `WARNING`."""
         try:
-            return path.is_dir() and not path.is_symlink()
+            return entry.is_dir(follow_symlinks=False)
         except OSError as exc:
-            logger.warning("путь не опрошен: %s (%s: %s)", path, type(exc).__name__, exc)
-            return False
-
-    def _is_repo_root(self, directory: Path) -> bool:
-        """`True`, если внутри есть `.git` — каталог или файл (submodule)."""
-        try:
-            return (directory / GIT_ENTRY).exists()
-        except OSError as exc:
-            logger.warning("`.git` не опрошен: %s (%s: %s)", directory, type(exc).__name__, exc)
+            logger.warning("путь не опрошен: %s (%s: %s)", entry.path, type(exc).__name__, exc)
             return False

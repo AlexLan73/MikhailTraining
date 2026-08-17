@@ -23,8 +23,10 @@ _RICH = "rich"
 class RendererFactory:
     """Создаёт рендерер консоли; поток вывода задаётся один раз при сборке."""
 
-    def __init__(self, stream: TextIO = sys.stdout) -> None:
-        self._stream = stream
+    def __init__(self, stream: TextIO | None = None) -> None:
+        # H-10: `sys.stdout` берём в момент вызова, а не импорта — иначе подмена stdout
+        # (pytest capsys, перенаправление в файл после импорта) проходит мимо рендерера.
+        self._stream = stream if stream is not None else sys.stdout
 
     def create(self) -> ConsoleRenderer:
         """`rich` установлен → `RichConsoleRenderer`, иначе `PlainConsoleRenderer`."""

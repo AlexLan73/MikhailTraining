@@ -38,15 +38,22 @@ class ConsoleRenderer(Protocol):
 
 
 def summary_rows(results: Sequence[MdFileResult], summary: ScanSummary) -> tuple[SummaryRow, ...]:
-    """Таблица итогов: файлы, ссылки, битые, таймауты, ошибки, время, код возврата."""
-    links = sum(len(result.links) for result in results)
-    broken = _count(results, CheckStatus.BROKEN)
-    timeouts = _count(results, CheckStatus.TIMEOUT)
-    failed = sum(1 for result in results if not result.ok)
+    """Таблица итогов: файлы, ссылки, битые, таймауты, ошибки, время, код возврата.
+
+    H-11 🔴-1: числа берутся из `summary.counters` — того же источника, что и Markdown-отчёт
+    (`StatisticsCollector`), иначе экран и файл расходились («битых» без TIMEOUT против `broken_total`).
+    `results` остаются для запасного пути, если счётчика в `summary` нет (подставной summary в тестах).
+    """
+    counters = summary.counters
+    files = int(counters.get("md_files_total", len(results)))
+    links = int(counters.get("links_total", sum(len(result.links) for result in results)))
+    timeouts = int(counters.get("timeout_http", _count(results, CheckStatus.TIMEOUT)))
+    broken = int(counters.get("broken_total", _count(results, CheckStatus.BROKEN) + timeouts))
+    failed = int(counters.get("files_failed", sum(1 for result in results if not result.ok)))
     return (
-        ("файлов", str(len(results)), False),
+        ("файлов", str(files), False),
         ("ссылок", str(links), False),
-        ("битых", str(broken), broken > 0),
+        ("битых (вкл. таймауты)", str(broken), broken > 0),
         ("таймаутов", str(timeouts), timeouts > 0),
         ("файлов с ошибкой", str(failed), failed > 0),
         ("длительность, с", f"{summary.duration_sec:.2f}", False),
