@@ -76,6 +76,8 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-ra --strict-markers"
+# Тесты с реальной сетью (этап 2 hw01): в основной набор не входят — исключаются `-m "not network"`.
+markers = ["network: тест ходит в реальную сеть (запускать явно: pytest -m network)"]
 
 [tool.mypy]
 python_version = "3.12"

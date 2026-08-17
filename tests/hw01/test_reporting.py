@@ -347,3 +347,32 @@ def test_pipe_in_detail_is_escaped(results: list[MdFileResult], summary: ScanSum
     """`|` внутри причины экранируется — иначе строка таблицы разъедется."""
     body = sections(build(results, summary))["Битые локальные ссылки"]
     assert "файла нет \\| проверь путь" in body
+
+
+def test_access_denied_codes_go_to_separate_section() -> None:
+    """Решение Alex (ревью 6): 401/403/429 — отдельная секция, а не «мёртвые» ссылки."""
+    from datetime import datetime
+
+    from core.mdscan.config.config_draft import ConfigDraft
+    from core.mdscan.config.scan_config import ScanConfig
+    from core.mdscan.enums.check_status import CheckStatus
+    from core.mdscan.enums.link_kind import LinkKind
+    from core.mdscan.enums.link_origin import LinkOrigin
+    from core.mdscan.models.md_file_result import MdFileResult
+    from core.mdscan.models.md_link import MdLink
+    from core.mdscan.models.repo_info import RepoInfo
+    from core.mdscan.models.scan_summary import ScanSummary
+    from core.mdscan.reporting.markdown_report_builder import MarkdownReportBuilder
+
+    forbidden = MdLink("https://x.test/a", LinkOrigin.INLINE, 1, LinkKind.URL, CheckStatus.BROKEN, "HTTP 403", 403)
+    missing = MdLink("https://x.test/b", LinkOrigin.INLINE, 2, LinkKind.URL, CheckStatus.BROKEN, "HTTP 404", 404)
+    result = MdFileResult(RepoInfo(root=Path("r")), Path("r/a.md"), "a.md", [forbidden, missing])
+    config = ScanConfig.from_draft(ConfigDraft.from_defaults())
+    text = MarkdownReportBuilder(config, datetime(2026, 8, 17, 5, 0, 0)).build(
+        [result], ScanSummary(counters={}, duration_sec=0.0, exit_code=1)
+    )
+    denied_at = text.index("## HTTP 401/403/429")
+    broken_at = text.index("## Битые HTTP-ссылки")
+    assert broken_at < denied_at
+    assert "x.test/a" in text[denied_at:] and "x.test/a" not in text[broken_at:denied_at]
+    assert "x.test/b" in text[broken_at:denied_at]

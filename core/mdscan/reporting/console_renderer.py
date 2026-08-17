@@ -62,7 +62,10 @@ def broken_rows(results: Sequence[MdFileResult]) -> tuple[BrokenRow, ...]:
             if link.status not in (CheckStatus.BROKEN, CheckStatus.TIMEOUT):
                 continue
             code = str(link.http_code) if link.http_code else (link.detail or "—")
-            rows.append((f"{result.rel_path}:{link.line}", link.target, link.status.value, code))
+            status = link.status.value
+            if link.http_code in (401, 403, 429):  # решение Alex (ревью 6): доступ закрыт ≠ страницы нет
+                status = f"{status} (доступ закрыт?)"
+            rows.append((f"{result.rel_path}:{link.line}", link.target, status, code))
     return tuple(rows)
 
 

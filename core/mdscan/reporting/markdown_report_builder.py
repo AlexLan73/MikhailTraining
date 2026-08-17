@@ -36,6 +36,9 @@ _LOCAL_KINDS = frozenset({LinkKind.LOCAL, LinkKind.ANCHOR})
 
 #: Категории ссылок, которые проверяются по сети (у них есть код ответа).
 _HTTP_KINDS = frozenset({LinkKind.URL, LinkKind.GITHUB})
+#: Коды «доступ закрыт», а не «страницы нет»: сайт жив, но не пускает автомат (бот-защита, авторизация,
+#: лимит запросов). Решение Alex (ревью 6): показывать отдельной секцией, чтобы не смешивать с мёртвыми ссылками.
+_ACCESS_DENIED_CODES = frozenset({401, 403, 429})
 
 _SelectedLinks = list[tuple[MdFileResult, MdLink]]
 
@@ -64,6 +67,7 @@ class MarkdownReportBuilder:
         lines += self._files_section(ordered)
         lines += self._broken_local_section(ordered)
         lines += self._broken_http_section(ordered)
+        lines += self._access_denied_section(ordered)
         lines += self._timeout_section(ordered)
         lines += self._errors_section(ordered)
         _log.info("отчёт собран: файлов %d, строк %d", len(ordered), len(lines))
@@ -150,9 +154,30 @@ class MarkdownReportBuilder:
                 _escape(link.detail) or _DASH,
             ]
             for result, link in _select(ordered, _HTTP_KINDS, CheckStatus.BROKEN)
+            if link.http_code not in _ACCESS_DENIED_CODES
         ]
         header = ("файл", "строка", "url", "код", "причина")
         return _block("## Битые HTTP-ссылки", header, rows)
+
+    def _access_denied_section(self, ordered: Sequence[MdFileResult]) -> list[str]:
+        """`401`/`403`/`429` — сайт отвечает, но не пускает автомат: вероятно бот-защита или лимит.
+
+        Такие ссылки остаются `BROKEN` в статистике (мы не смогли подтвердить доступность), но в отчёте
+        стоят отдельно: чинить их обычно не нужно — нужно открыть глазами.
+        """
+        rows = [
+            [
+                _file_label(result),
+                str(link.line),
+                _code(link.target),
+                str(link.http_code),
+                _escape(link.detail) or _DASH,
+            ]
+            for result, link in _select(ordered, _HTTP_KINDS, CheckStatus.BROKEN)
+            if link.http_code in _ACCESS_DENIED_CODES
+        ]
+        header = ("файл", "строка", "url", "код", "причина")
+        return _block("## HTTP 401/403/429 — вероятно защита от ботов или лимит (проверить вручную)", header, rows)
 
     def _timeout_section(self, ordered: Sequence[MdFileResult]) -> list[str]:
         """`TIMEOUT` — отдельная секция: причина иная, чем у `BROKEN` (D11)."""

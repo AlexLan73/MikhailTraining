@@ -29,7 +29,7 @@ class Hw01MdLinks(HomeworkTask):
     #: Размер набора B: 200–500 файлов (спека §3.4); тесты ставят меньше — прогон быстрее.
     gen_files: int = 500  # набор B: 200–500 (§9.3); на 200 накладные расходы потоков съедают выигрыш
     #: Сколько потоков разбора сравнивается с одним в замере `speedup` (§9.3).
-    parse_workers: int = 5
+    parse_workers: int = 10  # = workers.parse по умолчанию (ревью 6, Alex)
 
     def solve(self, ctx: HomeworkContext) -> dict[str, float]:
         builder = FixtureTreeBuilder()

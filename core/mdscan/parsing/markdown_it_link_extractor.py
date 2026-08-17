@@ -107,6 +107,11 @@ class MarkdownItLinkExtractor:
         if md.linkify is None and md.options.get("linkify"):
             logger.warning("linkify-it-py не установлен — автораспознавание голых URL выключено")
             md.options["linkify"] = False
+        elif md.linkify is not None:
+            # Боевой прогон dsp-gpu: «fuzzy»-режим linkify превращал имена файлов `Full.md`, `conftest.py`,
+            # `prng.cl` в URL (`.md`/`.py`/`.cl` — доменные зоны) → десятки ложных BROKEN.
+            # Голый URL считаем ссылкой только со схемой (`https://…`) или `www.`.
+            md.linkify.set({"fuzzy_link": False, "fuzzy_email": False})
         for name in plugins:
             if name == "footnote":
                 md.use(footnote_plugin)

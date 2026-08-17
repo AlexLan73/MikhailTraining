@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from datetime import datetime
 from pathlib import Path
 from typing import Final
@@ -54,6 +54,21 @@ class TranscriptTokenMeter:
             self._offset,
             len(self._known),
         )
+
+    def start_from(self, label: str, offset: int, known_agents: Iterable[str] = ()) -> None:
+        """Открыть окно по **сохранённой** точке отсчёта (другой процесс: скил записал смещение в файл).
+
+        `offset` — число строк главного файла на момент старта, `known_agents` — имена
+        файлов агентов, существовавших до старта. Нужен, потому что оркестрант считает
+        токены не в том процессе, где вызывал :meth:`start`.
+        """
+        self._label = label
+        self._offset = int(offset)
+        self._known = frozenset(known_agents)
+        self._started_at = self._clock()
+        self._finished_at = None
+        self._aggregator = None
+        _LOG.info("подсчёт токенов от сохранённой точки: метка=%s смещение=%d", label, self._offset)
 
     def mark(self, agent: str, task: str) -> None:
         """Привязать агента к таску вручную; ярлык ``TASK=`` в файле важнее."""

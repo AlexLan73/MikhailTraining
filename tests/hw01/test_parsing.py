@@ -393,3 +393,10 @@ def test_headings_on_reference_tree_file(reference_tree: ReferenceTree) -> None:
     text = MarkdownReader().read(reference_tree.root / "docs" / "install.md")
 
     assert MarkdownItHeadingSource().headings(text) == ("Установка", "Требования")
+
+
+def test_bare_filenames_are_not_linkified() -> None:
+    """Боевой прогон dsp-gpu: `Full.md`/`conftest.py` не должны становиться URL (fuzzy linkify выключен)."""
+    text = "см. Full.md и conftest.py, а также https://example.com/x и http://prng.cl"
+    targets = [link.target for link in MarkdownItLinkExtractor().extract(text)]
+    assert targets == ["https://example.com/x", "http://prng.cl"]

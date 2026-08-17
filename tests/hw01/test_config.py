@@ -74,7 +74,7 @@ def test_1_created_file_keeps_comments(tmp_path: Path, loader: YamlConfigLoader)
 
     assert "mdscan.yaml — конфигурация сканера Markdown-ссылок" in text
     assert "# ЧТО сканируем и откуда берём репозитории." in text
-    assert "# сколько .md-ФАЙЛОВ разбирается одновременно." in text
+    assert "# сколько .md-ФАЙЛОВ разбирается одновременно" in text
     assert "targets_resolved" not in text  # служебное поле в файл не выводится
 
 
